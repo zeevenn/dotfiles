@@ -1,0 +1,20 @@
+# npm local configuration (not tracked in git)
+# Copy this to ~/.npmrc.local and fill in your sensitive data
+
+# NPM authentication token
+# Get from: https://www.npmjs.com/settings/<username>/tokens
+# //registry.npmjs.org/:_authToken=YOUR_NPM_TOKEN
+
+# GitHub Package Registry (if needed)
+# @YOUR_ORG:registry=https://npm.pkg.github.com
+# //npm.pkg.github.com/:_authToken=YOUR_GITHUB_TOKEN
+
+# Private registry (if needed)
+# @YOUR_SCOPE:registry=https://your-registry.com
+# //your-registry.com/:_authToken=YOUR_TOKEN
+
+# Proxy settings (if behind corporate proxy)
+# proxy=http://proxy.company.com:8080
+# https-proxy=http://proxy.company.com:8080
+# strict-ssl=false
+

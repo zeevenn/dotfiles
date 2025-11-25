@@ -137,7 +137,21 @@ install_dotfiles () {
   done
 }
 
+install_zinit () {
+  local ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
+  
+  if [ ! -d "$ZINIT_HOME" ]; then
+    info 'installing Zinit'
+    mkdir -p "$(dirname $ZINIT_HOME)"
+    git clone https://github.com/zdharma-continuum/zinit.git "$ZINIT_HOME"
+    success 'Zinit installed'
+  else
+    success 'Zinit already installed'
+  fi
+}
+
 setup_gitconfig
+install_zinit
 install_dotfiles
 
 # If we're on a Mac, let's install and setup homebrew.

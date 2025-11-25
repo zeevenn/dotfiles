@@ -2,7 +2,17 @@ cask_args appdir: '/Applications'
 
 tap 'homebrew/bundle'
 
-brew 'atuin'
+# Shell enhancements
+brew 'atuin'       # Better shell history
+brew 'zoxide'      # Smarter cd command
+brew 'fzf'         # Fuzzy finder
+brew 'eza'         # Modern ls replacement
+
+# Development tools
+brew 'fnm'         # Fast Node Manager
+brew 'watchman'    # File watcher for React Native
+
+# System tools
 brew 'cloudflared'
 brew 'imagemagick'
 brew 'postgresql@17'

@@ -1,2 +1,31 @@
+# Local configuration files (contain sensitive data)
 git/gitconfig.local.symlink
+*.local
+*.local.symlink
+
+# Brewfile lock file
 Brewfile.lock.json
+
+# SSH keys and config (if any local overrides)
+ssh/id_*
+ssh/*.pub
+ssh/known_hosts
+
+# Environment-specific files
+.env
+.env.local
+.envrc
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Zinit plugins cache
+.zinit/
