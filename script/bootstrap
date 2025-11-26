@@ -49,6 +49,65 @@ setup_gitconfig () {
   fi
 }
 
+setup_ssh_key () {
+  local ssh_key="$HOME/.ssh/id_ed25519"
+  
+  if ! [ -f "$ssh_key" ]
+  then
+    info 'setup SSH key'
+    
+    user ' - Generate SSH key? [y/n]'
+    read -e ssh_input
+    
+    case "$ssh_input" in
+      y|Y|yes|YES)
+        user ' - Enter SSH key comment (usually your email)'
+        read -e ssh_comment
+        
+        # Create .ssh directory if it doesn't exist
+        mkdir -p "$HOME/.ssh"
+        chmod 700 "$HOME/.ssh"
+        
+        # Generate ED25519 key
+        ssh-keygen -t ed25519 -f "$ssh_key" -C "$ssh_comment" -N ""
+        
+        success "SSH key generated at $ssh_key"
+        
+        # Display public key and add to ssh-agent
+        echo ''
+        info 'Adding SSH key to ssh-agent'
+        eval "$(ssh-agent -s)" > /dev/null 2>&1
+        
+        if [ "$(uname -s)" == "Darwin" ]
+        then
+          ssh-add --apple-use-keychain "$ssh_key"
+        else
+          ssh-add "$ssh_key"
+        fi
+        
+        success 'SSH key added to agent'
+        
+        # Show public key
+        echo ''
+        echo "  Your public SSH key:"
+        echo ''
+        sed 's/^/    /' "$ssh_key.pub"
+        echo ''
+        user ' - Add this key to GitHub, GitLab, or Bitbucket?'
+        user '   GitHub:  https://github.com/settings/keys'
+        user '   GitLab:  https://gitlab.com/-/profile/keys'
+        user '   Bitbucket: https://bitbucket.org/account/settings/ssh-keys/'
+        echo ''
+        ;;
+      n|N|no|NO|"")
+        success 'skipped SSH key generation'
+        ;;
+    esac
+  else
+    success 'SSH key already exists'
+  fi
+}
+
 setup_proxy () {
   if ! [ -f proxy/env.local ]
   then
@@ -180,6 +239,7 @@ install_zinit () {
 }
 
 setup_gitconfig
+setup_ssh_key
 setup_proxy
 install_zinit
 install_dotfiles
