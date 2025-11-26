@@ -12,8 +12,10 @@ Host *
 # GitHub
 Host github.com
   HostName github.com
+  Port 443
   User git
   IdentityFile ~/.ssh/id_ed25519
+  ProxyCommand nc -x 127.0.0.1:7890 ssh.github.com %p
 
 # Example: Custom server
 # Host myserver
