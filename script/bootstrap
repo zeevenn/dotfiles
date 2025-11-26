@@ -49,6 +49,35 @@ setup_gitconfig () {
   fi
 }
 
+setup_proxy () {
+  if ! [ -f proxy/env.local ]
+  then
+    info 'setup proxy'
+
+    user ' - Enable proxy? [y=default(127.0.0.1:7890)/n=no/custom URL]'
+    read -e proxy_input
+
+    case "$proxy_input" in
+      y|Y|yes|YES)
+        # Use default proxy
+        proxy_url="http://127.0.0.1:7890"
+        sed -e "s|PROXY_URL|$proxy_url|g" proxy/env.local.example > proxy/env.local
+        success "proxy configured: $proxy_url"
+        ;;
+      n|N|no|NO|"")
+        # Skip proxy configuration
+        success 'skipped proxy configuration'
+        ;;
+      *)
+        # Custom URL
+        proxy_url="$proxy_input"
+        sed -e "s|PROXY_URL|$proxy_url|g" proxy/env.local.example > proxy/env.local
+        success "proxy configured: $proxy_url"
+        ;;
+    esac
+  fi
+}
+
 
 link_file () {
   local src=$1 dst=$2
@@ -151,6 +180,7 @@ install_zinit () {
 }
 
 setup_gitconfig
+setup_proxy
 install_zinit
 install_dotfiles
 
