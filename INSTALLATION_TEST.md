@@ -295,10 +295,6 @@ Verify all modules are present and working:
 - [ ] **ruby/** - Ruby development
   - [ ] rbenv lazy loads (if installed)
   
-- [ ] **bun/** - Bun runtime
-  - [ ] BUN_INSTALL set
-  - [ ] bun in PATH
-  
 - [ ] **react-native/** - Mobile development
   - [ ] iOS aliases work
   - [ ] Android aliases work
