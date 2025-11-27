@@ -53,9 +53,6 @@ defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad Clicking -bool
 defaults -currentHost write NSGlobalDomain com.apple.mouse.tapBehavior -int 1
 defaults write NSGlobalDomain com.apple.mouse.tapBehavior -int 1
 
-# Disable “natural” (Lion-style) scrolling
-defaults write NSGlobalDomain com.apple.swipescrolldirection -bool false
-
 # Use three finger drag to move windows
 defaults write com.apple.AppleMultitouchTrackpad Dragging -int 1
 defaults write com.apple.driver.AppleMultitouchTrackpad Dragging -int 1
