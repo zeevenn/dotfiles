@@ -1,0 +1,592 @@
+###############################################################################
+# Dock 程序坞、Dashboard 仪表板和触发角                                         #
+###############################################################################
+
+# 为堆栈（Dock）的网格视图启用高亮悬停效果
+defaults write com.apple.dock mouse-over-hilite-stack -bool true
+
+# 将 Dock 项目的图标大小设置为 36 像素
+defaults write com.apple.dock tilesize -int 36
+
+# 更改最小化/最大化窗口效果
+defaults write com.apple.dock mineffect -string "scale"
+
+# 将窗口最小化到其应用程序图标中
+defaults write com.apple.dock minimize-to-application -bool true
+
+# 为所有 Dock 项目启用弹簧加载
+defaults write com.apple.dock enable-spring-load-actions-on-all-items -bool true
+
+# 在 Dock 中为打开的应用程序显示指示灯
+defaults write com.apple.dock show-process-indicators -bool true
+
+# 从 Dock 中清除所有（默认）应用程序图标
+# 这仅在设置新 Mac 时或不使用 Dock 启动应用程序时真正有用。
+#defaults write com.apple.dock persistent-apps -array
+
+# 在 Dock 中仅显示打开的应用程序
+#defaults write com.apple.dock static-only -bool true
+
+# 不要在从 Dock 打开应用程序时显示动画
+defaults write com.apple.dock launchanim -bool false
+
+# 加快 Mission Control 动画速度
+defaults write com.apple.dock expose-animation-duration -float 0.1
+
+# 不要在 Mission Control 中按应用程序分组窗口
+# （即使用旧的 Exposé 行为）
+defaults write com.apple.dock expose-group-by-app -bool false
+
+# 禁用 Dashboard（仪表板）
+defaults write com.apple.dashboard mcx-disabled -bool true
+
+# 不要将 Dashboard 显示为 Space
+defaults write com.apple.dock dashboard-in-overlay -bool true
+
+# 不要根据最近使用情况自动重新排列 Spaces
+defaults write com.apple.dock mru-spaces -bool false
+
+# 移除自动隐藏 Dock 的延迟
+defaults write com.apple.dock autohide-delay -float 0
+# 移除隐藏/显示 Dock 时的动画
+defaults write com.apple.dock autohide-time-modifier -float 0
+
+# 自动隐藏和显示 Dock
+defaults write com.apple.dock autohide -bool true
+
+# 使隐藏应用程序的 Dock 图标半透明
+defaults write com.apple.dock showhidden -bool true
+
+# 不要在 Dock 中显示最近使用的应用程序
+defaults write com.apple.dock show-recents -bool false
+
+# 禁用 Launchpad 手势（用拇指和三个手指捏合）
+#defaults write com.apple.dock showLaunchpadGestureEnabled -int 0
+
+# 重置 Launchpad，但保持桌面壁纸不变
+find "${HOME}/Library/Application Support/Dock" -name "*-*.db" -maxdepth 1 -delete
+
+# 将 iOS 和 Watch 模拟器添加到 Launchpad
+sudo ln -sf "/Applications/Xcode.app/Contents/Developer/Applications/Simulator.app" "/Applications/Simulator.app"
+sudo ln -sf "/Applications/Xcode.app/Contents/Developer/Applications/Simulator (Watch).app" "/Applications/Simulator (Watch).app"
+
+# 在 Dock 左侧（应用程序所在位置）添加间隔
+#defaults write com.apple.dock persistent-apps -array-add '{tile-data={}; tile-type="spacer-tile";}'
+# 在 Dock 右侧（废纸篓所在位置）添加间隔
+#defaults write com.apple.dock persistent-others -array-add '{tile-data={}; tile-type="spacer-tile";}'
+
+# 触发角（Hot corners）
+# 可选值：
+#  0: 无操作
+#  2: Mission Control（调度中心）
+#  3: 显示应用程序窗口
+#  4: 桌面
+#  5: 启动屏幕保护程序
+#  6: 禁用屏幕保护程序
+#  7: Dashboard（仪表板）
+# 10: 使显示器进入睡眠
+# 11: Launchpad（启动台）
+# 12: 通知中心
+# 13: 锁定屏幕
+# 左上角屏幕触发角 → Mission Control
+defaults write com.apple.dock wvous-tl-corner -int 2
+defaults write com.apple.dock wvous-tl-modifier -int 0
+# 右上角屏幕触发角 → 桌面
+defaults write com.apple.dock wvous-tr-corner -int 4
+defaults write com.apple.dock wvous-tr-modifier -int 0
+# 左下角屏幕触发角 → 启动屏幕保护程序
+defaults write com.apple.dock wvous-bl-corner -int 5
+defaults write com.apple.dock wvous-bl-modifier -int 0
+
+###############################################################################
+# Safari & WebKit 浏览器设置                                                   #
+###############################################################################
+
+# 隐私：不要将搜索查询发送给 Apple
+defaults write com.apple.Safari UniversalSearchEnabled -bool false
+defaults write com.apple.Safari SuppressSearchSuggestions -bool true
+
+# 按 Tab 键高亮显示网页上的每个项目
+defaults write com.apple.Safari WebKitTabToLinksPreferenceKey -bool true
+defaults write com.apple.Safari com.apple.Safari.ContentPageGroupIdentifier.WebKit2TabsToLinks -bool true
+
+# 在地址栏中显示完整的 URL（注意：这仍然会隐藏协议）
+defaults write com.apple.Safari ShowFullURLInSmartSearchField -bool true
+
+# 将 Safari 的主页设置为 `about:blank` 以加快加载速度
+defaults write com.apple.Safari HomePage -string "about:blank"
+
+# 防止 Safari 在下载后自动打开"安全"文件
+defaults write com.apple.Safari AutoOpenSafeDownloads -bool false
+
+# 允许按 Backspace 键返回历史记录中的上一页
+defaults write com.apple.Safari com.apple.Safari.ContentPageGroupIdentifier.WebKit2BackspaceKeyNavigationEnabled -bool true
+
+# 默认隐藏 Safari 的书签栏
+defaults write com.apple.Safari ShowFavoritesBar -bool false
+
+# 在常用网站中隐藏 Safari 的侧边栏
+defaults write com.apple.Safari ShowSidebarInTopSites -bool false
+
+# 禁用 Safari 的历史记录和常用网站缩略图缓存
+defaults write com.apple.Safari DebugSnapshotsUpdatePolicy -int 2
+
+# 启用 Safari 的调试菜单
+defaults write com.apple.Safari IncludeInternalDebugMenu -bool true
+
+# 使 Safari 的搜索横幅默认为"包含"而不是"开始于"
+defaults write com.apple.Safari FindOnPageMatchesWordStartsOnly -bool false
+
+# 从 Safari 的书签栏中删除无用的图标
+defaults write com.apple.Safari ProxiesInBookmarksBar "()"
+
+# 在 Safari 中启用"开发"菜单和 Web 检查器
+defaults write com.apple.Safari IncludeDevelopMenu -bool true
+defaults write com.apple.Safari WebKitDeveloperExtrasEnabledPreferenceKey -bool true
+defaults write com.apple.Safari com.apple.Safari.ContentPageGroupIdentifier.WebKit2DeveloperExtrasEnabled -bool true
+
+# 为 Web 视图添加显示 Web 检查器的上下文菜单项
+defaults write NSGlobalDomain WebKitDeveloperExtras -bool true
+
+# 启用连续拼写检查
+defaults write com.apple.Safari WebContinuousSpellCheckingEnabled -bool true
+# 禁用自动更正
+defaults write com.apple.Safari WebAutomaticSpellingCorrectionEnabled -bool false
+
+# 禁用自动填充
+defaults write com.apple.Safari AutoFillFromAddressBook -bool false
+defaults write com.apple.Safari AutoFillPasswords -bool false
+defaults write com.apple.Safari AutoFillCreditCardData -bool false
+defaults write com.apple.Safari AutoFillMiscellaneousForms -bool false
+
+# 警告有关欺诈性网站
+defaults write com.apple.Safari WarnAboutFraudulentWebsites -bool true
+
+# 禁用插件
+defaults write com.apple.Safari WebKitPluginsEnabled -bool false
+defaults write com.apple.Safari com.apple.Safari.ContentPageGroupIdentifier.WebKit2PluginsEnabled -bool false
+
+# 禁用 Java
+defaults write com.apple.Safari WebKitJavaEnabled -bool false
+defaults write com.apple.Safari com.apple.Safari.ContentPageGroupIdentifier.WebKit2JavaEnabled -bool false
+defaults write com.apple.Safari com.apple.Safari.ContentPageGroupIdentifier.WebKit2JavaEnabledForLocalFiles -bool false
+
+# 阻止弹出窗口
+defaults write com.apple.Safari WebKitJavaScriptCanOpenWindowsAutomatically -bool false
+defaults write com.apple.Safari com.apple.Safari.ContentPageGroupIdentifier.WebKit2JavaScriptCanOpenWindowsAutomatically -bool false
+
+# 禁用自动播放视频
+#defaults write com.apple.Safari WebKitMediaPlaybackAllowsInline -bool false
+#defaults write com.apple.SafariTechnologyPreview WebKitMediaPlaybackAllowsInline -bool false
+#defaults write com.apple.Safari com.apple.Safari.ContentPageGroupIdentifier.WebKit2AllowsInlineMediaPlayback -bool false
+#defaults write com.apple.SafariTechnologyPreview com.apple.Safari.ContentPageGroupIdentifier.WebKit2AllowsInlineMediaPlayback -bool false
+
+# 启用"请勿跟踪"
+defaults write com.apple.Safari SendDoNotTrackHTTPHeader -bool true
+
+# 自动更新扩展
+defaults write com.apple.Safari InstallExtensionUpdatesAutomatically -bool true
+
+###############################################################################
+# Mail 邮件设置                                                                #
+###############################################################################
+
+# 在 Mail.app 中禁用发送和回复动画
+defaults write com.apple.mail DisableReplyAnimations -bool true
+defaults write com.apple.mail DisableSendAnimations -bool true
+
+# 在 Mail.app 中复制电子邮件地址为 `foo@example.com` 格式，而不是 `Foo Bar <foo@example.com>`
+defaults write com.apple.mail AddressesIncludeNameOnPasteboard -bool false
+
+# 添加键盘快捷键 ⌘ + Enter 在 Mail.app 中发送电子邮件
+defaults write com.apple.mail NSUserKeyEquivalents -dict-add "Send" "@\U21a9"
+
+# 以会话模式显示电子邮件，按日期排序（最旧的在顶部）
+defaults write com.apple.mail DraftsViewerAttributes -dict-add "DisplayInThreadedMode" -string "yes"
+defaults write com.apple.mail DraftsViewerAttributes -dict-add "SortedDescending" -string "yes"
+defaults write com.apple.mail DraftsViewerAttributes -dict-add "SortOrder" -string "received-date"
+
+# 禁用内联附件（仅显示图标）
+defaults write com.apple.mail DisableInlineAttachmentViewing -bool true
+
+# 禁用自动拼写检查
+defaults write com.apple.mail SpellCheckingBehavior -string "NoSpellCheckingEnabled"
+
+###############################################################################
+# Spotlight 聚焦搜索设置                                                        #
+###############################################################################
+
+# 隐藏 Spotlight 托盘图标（及后续帮助程序）
+#sudo chmod 600 /System/Library/CoreServices/Search.bundle/Contents/MacOS/Search
+# 对于任何挂载且尚未索引的卷，禁用 Spotlight 索引
+# 使用 `sudo mdutil -i off "/Volumes/foo"` 停止对任何卷的索引
+sudo defaults write /.Spotlight-V100/VolumeConfiguration Exclusions -array "/Volumes"
+# 更改索引顺序并禁用某些搜索结果
+# Yosemite 特有的搜索结果（如果您使用的是 macOS 10.9 或更旧版本，请删除它们）：
+# 	MENU_DEFINITION
+# 	MENU_CONVERSION
+# 	MENU_EXPRESSION
+# 	MENU_SPOTLIGHT_SUGGESTIONS (将搜索查询发送给 Apple)
+# 	MENU_WEBSEARCH             (将搜索查询发送给 Apple)
+# 	MENU_OTHER
+defaults write com.apple.spotlight orderedItems -array \
+	'{"enabled" = 1;"name" = "APPLICATIONS";}' \
+	'{"enabled" = 1;"name" = "SYSTEM_PREFS";}' \
+	'{"enabled" = 1;"name" = "DIRECTORIES";}' \
+	'{"enabled" = 1;"name" = "PDF";}' \
+	'{"enabled" = 1;"name" = "FONTS";}' \
+	'{"enabled" = 0;"name" = "DOCUMENTS";}' \
+	'{"enabled" = 0;"name" = "MESSAGES";}' \
+	'{"enabled" = 0;"name" = "CONTACT";}' \
+	'{"enabled" = 0;"name" = "EVENT_TODO";}' \
+	'{"enabled" = 0;"name" = "IMAGES";}' \
+	'{"enabled" = 0;"name" = "BOOKMARKS";}' \
+	'{"enabled" = 0;"name" = "MUSIC";}' \
+	'{"enabled" = 0;"name" = "MOVIES";}' \
+	'{"enabled" = 0;"name" = "PRESENTATIONS";}' \
+	'{"enabled" = 0;"name" = "SPREADSHEETS";}' \
+	'{"enabled" = 0;"name" = "SOURCE";}' \
+	'{"enabled" = 0;"name" = "MENU_DEFINITION";}' \
+	'{"enabled" = 0;"name" = "MENU_OTHER";}' \
+	'{"enabled" = 0;"name" = "MENU_CONVERSION";}' \
+	'{"enabled" = 0;"name" = "MENU_EXPRESSION";}' \
+	'{"enabled" = 0;"name" = "MENU_WEBSEARCH";}' \
+	'{"enabled" = 0;"name" = "MENU_SPOTLIGHT_SUGGESTIONS";}'
+# 在重建索引之前加载新设置
+killall mds > /dev/null 2>&1
+# 确保为主卷启用索引
+sudo mdutil -i on / > /dev/null
+# 从头开始重建索引
+sudo mdutil -E / > /dev/null
+
+###############################################################################
+# Terminal 终端 & iTerm 2                                                      #
+###############################################################################
+
+# 在 Terminal.app 中仅使用 UTF-8
+defaults write com.apple.terminal StringEncodings -array 4
+
+# 在 Terminal.app 中默认使用修改版的 Solarized Dark 主题
+osascript <<EOD
+
+tell application "Terminal"
+
+	local allOpenedWindows
+	local initialOpenedWindows
+	local windowID
+	set themeName to "Solarized Dark xterm-256color"
+
+	(* Store the IDs of all the open terminal windows. *)
+	set initialOpenedWindows to id of every window
+
+	(* Open the custom theme so that it gets added to the list
+	   of available terminal themes (note: this will open two
+	   additional terminal windows). *)
+	do shell script "open '$HOME/init/" & themeName & ".terminal'"
+
+	(* Wait a little bit to ensure that the custom theme is added. *)
+	delay 1
+
+	(* Set the custom theme as the default terminal theme. *)
+	set default settings to settings set themeName
+
+	(* Get the IDs of all the currently opened terminal windows. *)
+	set allOpenedWindows to id of every window
+
+	repeat with windowID in allOpenedWindows
+
+		(* Close the additional windows that were opened in order
+		   to add the custom theme to the list of terminal themes. *)
+		if initialOpenedWindows does not contain windowID then
+			close (every window whose id is windowID)
+
+		(* Change the theme for the initial opened terminal windows
+		   to remove the need to close them in order for the custom
+		   theme to be applied. *)
+		else
+			set current settings of tabs of (every window whose id is windowID) to settings set themeName
+		end if
+
+	end repeat
+
+end tell
+
+EOD
+
+# 为 Terminal.app 和所有 X11 应用启用"焦点跟随鼠标"
+# 即：将鼠标悬停在窗口上即可开始输入，无需先点击
+#defaults write com.apple.terminal FocusFollowsMouse -bool true
+#defaults write org.x.X11 wm_ffm -bool true
+
+# 在 Terminal.app 中启用安全键盘输入
+# 参见：https://security.stackexchange.com/a/47786/8918
+defaults write com.apple.terminal SecureKeyboardEntry -bool true
+
+# 禁用烦人的行标记
+defaults write com.apple.Terminal ShowLineMarks -int 0
+
+# 为 iTerm 安装 Solarized Dark 主题
+open "${HOME}/init/Solarized Dark.itermcolors"
+
+# 退出 iTerm 时不显示烦人的提示
+defaults write com.googlecode.iterm2 PromptOnQuit -bool false
+
+###############################################################################
+# Time Machine 时间机器                                                        #
+###############################################################################
+
+# 防止 Time Machine 提示使用新硬盘作为备份卷
+defaults write com.apple.TimeMachine DoNotOfferNewDisksForBackup -bool true
+
+# 禁用本地 Time Machine 备份
+hash tmutil &> /dev/null && sudo tmutil disablelocal
+
+###############################################################################
+# Activity Monitor 活动监视器                                                  #
+###############################################################################
+
+# 启动活动监视器时显示主窗口
+defaults write com.apple.ActivityMonitor OpenMainWindow -bool true
+
+# 在活动监视器的 Dock 图标中可视化 CPU 使用情况
+defaults write com.apple.ActivityMonitor IconType -int 5
+
+# 在活动监视器中显示所有进程
+defaults write com.apple.ActivityMonitor ShowCategory -int 0
+
+# 按 CPU 使用率排序活动监视器结果
+defaults write com.apple.ActivityMonitor SortColumn -string "CPUUsage"
+defaults write com.apple.ActivityMonitor SortDirection -int 0
+
+###############################################################################
+# Address Book 通讯录、Dashboard、iCal、TextEdit 和 Disk Utility             #
+###############################################################################
+
+# 在通讯录中启用调试菜单
+defaults write com.apple.addressbook ABShowDebugMenu -bool true
+
+# 启用 Dashboard 开发者模式（允许在桌面上保留小部件）
+defaults write com.apple.dashboard devmode -bool true
+
+# 在 iCal 中启用调试菜单（10.8 之前的版本）
+defaults write com.apple.iCal IncludeDebugMenu -bool true
+
+# 在 TextEdit 中使用纯文本模式创建新文档
+defaults write com.apple.TextEdit RichText -int 0
+# 在 TextEdit 中以 UTF-8 格式打开和保存文件
+defaults write com.apple.TextEdit PlainTextEncoding -int 4
+defaults write com.apple.TextEdit PlainTextEncodingForWrite -int 4
+
+# 在磁盘工具中启用调试菜单
+defaults write com.apple.DiskUtility DUDebugMenuEnabled -bool true
+defaults write com.apple.DiskUtility advanced-image-options -bool true
+
+# 使用 QuickTime Player 打开视频时自动播放
+defaults write com.apple.QuickTimePlayerX MGPlayMovieOnOpen -bool true
+
+###############################################################################
+# Mac App Store 应用商店                                                       #
+###############################################################################
+
+# 在 Mac App Store 中启用 WebKit 开发者工具
+defaults write com.apple.appstore WebKitDeveloperExtras -bool true
+
+# 在 Mac App Store 中启用调试菜单
+defaults write com.apple.appstore ShowDebugMenu -bool true
+
+# 启用自动更新检查
+defaults write com.apple.SoftwareUpdate AutomaticCheckEnabled -bool true
+
+# 每天检查软件更新，而不仅仅是每周一次
+defaults write com.apple.SoftwareUpdate ScheduleFrequency -int 1
+
+# 在后台下载新的可用更新
+defaults write com.apple.SoftwareUpdate AutomaticDownload -int 1
+
+# 安装系统数据文件和安全更新
+defaults write com.apple.SoftwareUpdate CriticalUpdateInstall -int 1
+
+# 自动下载在其他 Mac 上购买的应用
+defaults write com.apple.SoftwareUpdate ConfigDataInstall -int 1
+
+# 开启应用自动更新
+defaults write com.apple.commerce AutoUpdate -bool true
+
+# 允许 App Store 在 macOS 更新时重启计算机
+defaults write com.apple.commerce AutoUpdateRestartRequired -bool true
+
+###############################################################################
+# Photos 照片                                                                  #
+###############################################################################
+
+# 防止在插入设备时自动打开照片应用
+defaults -currentHost write com.apple.ImageCapture disableHotPlug -bool true
+
+###############################################################################
+# Messages 信息                                                                #
+###############################################################################
+
+# 禁用自动表情符号替换（即使用纯文本表情符号）
+defaults write com.apple.messageshelper.MessageController SOInputLineSettings -dict-add "automaticEmojiSubstitutionEnablediMessage" -bool false
+
+# 禁用智能引号（对于包含代码的消息很烦人）
+defaults write com.apple.messageshelper.MessageController SOInputLineSettings -dict-add "automaticQuoteSubstitutionEnabled" -bool false
+
+# 禁用连续拼写检查
+defaults write com.apple.messageshelper.MessageController SOInputLineSettings -dict-add "continuousSpellCheckingEnabled" -bool false
+
+###############################################################################
+# Google Chrome & Google Chrome Canary                                        #
+###############################################################################
+
+# 禁用触控板上过于敏感的后退滑动手势
+defaults write com.google.Chrome AppleEnableSwipeNavigateWithScrolls -bool false
+defaults write com.google.Chrome.canary AppleEnableSwipeNavigateWithScrolls -bool false
+
+# 禁用 Magic Mouse 上过于敏感的后退滑动手势
+defaults write com.google.Chrome AppleEnableMouseSwipeNavigateWithScrolls -bool false
+defaults write com.google.Chrome.canary AppleEnableMouseSwipeNavigateWithScrolls -bool false
+
+# 使用系统原生的打印预览对话框
+defaults write com.google.Chrome DisablePrintPreview -bool true
+defaults write com.google.Chrome.canary DisablePrintPreview -bool true
+
+# 默认展开打印对话框
+defaults write com.google.Chrome PMPrintingExpandedStateForPrint2 -bool true
+defaults write com.google.Chrome.canary PMPrintingExpandedStateForPrint2 -bool true
+
+###############################################################################
+# GPGMail 2                                                                   #
+###############################################################################
+
+# 默认情况下禁用电子邮件签名
+defaults write ~/Library/Preferences/org.gpgtools.gpgmail SignNewEmailsByDefault -bool false
+
+###############################################################################
+# Opera & Opera Developer                                                     #
+###############################################################################
+
+# 默认展开打印对话框
+defaults write com.operasoftware.Opera PMPrintingExpandedStateForPrint2 -boolean true
+defaults write com.operasoftware.OperaDeveloper PMPrintingExpandedStateForPrint2 -boolean true
+
+###############################################################################
+# SizeUp.app                                                                  #
+###############################################################################
+
+# 登录时启动 SizeUp
+defaults write com.irradiatedsoftware.SizeUp StartAtLogin -bool true
+
+# 下次启动时不显示偏好设置窗口
+defaults write com.irradiatedsoftware.SizeUp ShowPrefsOnNextStart -bool false
+
+###############################################################################
+# Sublime Text                                                                #
+###############################################################################
+
+# 安装 Sublime Text 设置
+cp -r init/Preferences.sublime-settings ~/Library/Application\ Support/Sublime\ Text*/Packages/User/Preferences.sublime-settings 2> /dev/null
+
+###############################################################################
+# Spectacle.app                                                               #
+###############################################################################
+
+# 设置我偏好的键盘快捷键
+cp -r init/spectacle.json ~/Library/Application\ Support/Spectacle/Shortcuts.json 2> /dev/null
+
+###############################################################################
+# Transmission.app                                                            #
+###############################################################################
+
+# 使用 `~/Documents/Torrents` 存储未完成的下载
+defaults write org.m0k.transmission UseIncompleteDownloadFolder -bool true
+defaults write org.m0k.transmission IncompleteDownloadFolder -string "${HOME}/Documents/Torrents"
+
+# 使用 `~/Downloads` 存储已完成的下载
+defaults write org.m0k.transmission DownloadLocationConstant -bool true
+
+# 下载前不提示确认
+defaults write org.m0k.transmission DownloadAsk -bool false
+defaults write org.m0k.transmission MagnetOpenAsk -bool false
+
+# 删除非下载中的活动传输前不提示确认
+defaults write org.m0k.transmission CheckRemoveDownloading -bool true
+
+# 删除原始 torrent 文件
+defaults write org.m0k.transmission DeleteOriginalTorrent -bool true
+
+# 隐藏捐赠消息
+defaults write org.m0k.transmission WarningDonate -bool false
+# 隐藏法律免责声明
+defaults write org.m0k.transmission WarningLegal -bool false
+
+# IP 阻止列表
+# 来源：https://giuliomac.wordpress.com/2014/02/19/best-blocklist-for-transmission/
+defaults write org.m0k.transmission BlocklistNew -bool true
+defaults write org.m0k.transmission BlocklistURL -string "http://john.bitsurge.net/public/biglist.p2p.gz"
+defaults write org.m0k.transmission BlocklistAutoUpdate -bool true
+
+# 启动时随机化端口
+defaults write org.m0k.transmission RandomPort -bool true
+
+###############################################################################
+# Twitter.app                                                                 #
+###############################################################################
+
+# 禁用智能引号（对于代码推文很烦人）
+defaults write com.twitter.twitter-mac AutomaticQuoteSubstitutionEnabled -bool false
+
+# 点击菜单栏图标时显示应用窗口
+defaults write com.twitter.twitter-mac MenuItemBehavior -int 1
+
+# 启用隐藏的"开发"菜单
+defaults write com.twitter.twitter-mac ShowDevelopMenu -bool true
+
+# 在后台打开链接
+defaults write com.twitter.twitter-mac openLinksInBackground -bool true
+
+# 允许按 `Esc` 键关闭"新推文"窗口
+defaults write com.twitter.twitter-mac ESCClosesComposeWindow -bool true
+
+# 显示全名而不是 Twitter 用户名
+defaults write com.twitter.twitter-mac ShowFullNames -bool true
+
+# 如果不是最前面的窗口，则在后台隐藏应用
+defaults write com.twitter.twitter-mac HideInBackground -bool true
+
+###############################################################################
+# Tweetbot.app                                                                #
+###############################################################################
+
+# 绕过烦人的慢速 t.co URL 缩短器
+defaults write com.tapbots.TweetbotMac OpenURLsDirectly -bool true
+
+###############################################################################
+# 重启受影响的应用程序                                                          #
+###############################################################################
+
+for app in "Activity Monitor" \
+	"Address Book" \
+	"Calendar" \
+	"cfprefsd" \
+	"Contacts" \
+	"Dock" \
+	"Finder" \
+	"Google Chrome Canary" \
+	"Google Chrome" \
+	"Mail" \
+	"Messages" \
+	"Opera" \
+	"Photos" \
+	"Safari" \
+	"SizeUp" \
+	"Spectacle" \
+	"SystemUIServer" \
+	"Terminal" \
+	"Transmission" \
+	"Tweetbot" \
+	"Twitter" \
+	"iCal"; do
+	killall "${app}" &> /dev/null
+done
+echo "完成。注意：某些更改需要注销/重启才能生效。"
