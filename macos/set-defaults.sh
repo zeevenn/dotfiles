@@ -7,6 +7,8 @@
 #
 # Run ./set-defaults.sh and you'll be good to go.
 
+echo "Setting macOS defaults..."
+
 # Close any open System Preferences panes, to prevent them from overriding
 # settings we’re about to change
 osascript -e 'tell application "System Preferences" to quit'
@@ -180,35 +182,104 @@ defaults write com.apple.finder FXInfoPanesExpanded -dict \
 	OpenWith -bool true \
 	Privileges -bool true
 
-# Disable press-and-hold for keys in favor of key repeat.
-defaults write -g ApplePressAndHoldEnabled -bool false
+###############################################################################
+# Dock, and hot corners                                            #
+###############################################################################
 
-# Use AirDrop over every interface. srsly this should be a default.
-defaults write com.apple.NetworkBrowser BrowseAllInterfaces 1
+# Enable highlight hover effect for the grid view of a stack (Dock)
+defaults write com.apple.dock mouse-over-hilite-stack -bool true
 
-# Disable the warning when changing a file extension (禁用扩展名更改警告)
-defaults write com.apple.finder FXEnableExtensionChangeWarning -bool false
+# Minimize windows into their application’s icon
+defaults write com.apple.dock minimize-to-application -bool true
 
-# Set a really fast key repeat.
-defaults write NSGlobalDomain KeyRepeat -int 1
+# Remove the auto-hiding Dock delay
+defaults write com.apple.dock autohide-delay -float 0
+# Remove the animation when hiding/showing the Dock
+defaults write com.apple.dock autohide-time-modifier -float 0
 
-# Show volumes on Desktop and in sidebar (显示硬盘、外置硬盘等)
-defaults write com.apple.finder ShowHardDrivesOnDesktop -bool true
-defaults write com.apple.finder ShowExternalHardDrivesOnDesktop -bool true
-defaults write com.apple.finder ShowRemovableMediaOnDesktop -bool true
-defaults write com.apple.finder ShowMountedServersOnDesktop -bool true
+# Automatically hide and show the Dock
+defaults write com.apple.dock autohide -bool true
 
-# Show user home folder in sidebar (add to favorites)
-# Note: Sidebar configuration is complex, manual setup via Finder is recommended
+# Make Dock icons of hidden applications translucent
+defaults write com.apple.dock showhidden -bool true
 
-# Run the screensaver if we're in the bottom-left hot corner.
+# Don’t show recent applications in Dock
+defaults write com.apple.dock show-recents -bool false
+
+# Hot corners
+# Possible values:
+#  0: no-op
+#  2: Mission Control
+#  3: Show application windows
+#  4: Desktop
+#  5: Start screen saver
+#  6: Disable screen saver
+#  7: Dashboard
+# 10: Put display to sleep
+# 11: Launchpad
+# 12: Notification Center
+# 13: Lock Screen
+# Top left screen corner → Mission Control
+defaults write com.apple.dock wvous-tl-corner -int 2
+defaults write com.apple.dock wvous-tl-modifier -int 0
+# Top right screen corner → Desktop
+defaults write com.apple.dock wvous-tr-corner -int 4
+defaults write com.apple.dock wvous-tr-modifier -int 0
+# Bottom left screen corner → Start screen saver
 defaults write com.apple.dock wvous-bl-corner -int 5
 defaults write com.apple.dock wvous-bl-modifier -int 0
 
-# Restart Finder and Dock to apply changes
-echo ""
-echo "Restarting Finder and Dock..."
-killall Finder
-killall Dock
+###############################################################################
+# Safari & WebKit                                                             #
+###############################################################################
 
-echo "✓ Done! macOS defaults applied."
+# Privacy: don’t send search queries to Apple
+defaults write com.apple.Safari UniversalSearchEnabled -bool false
+defaults write com.apple.Safari SuppressSearchSuggestions -bool true
+
+# Disable Safari’s thumbnail cache for History and Top Sites
+defaults write com.apple.Safari DebugSnapshotsUpdatePolicy -int 2
+
+# Set up Safari for development.
+defaults write com.apple.Safari.SandboxBroker ShowDevelopMenu -bool true
+defaults write com.apple.Safari.plist IncludeDevelopMenu -bool true
+defaults write com.apple.Safari.plist WebKitDeveloperExtrasEnabledPreferenceKey -bool true
+defaults write com.apple.Safari.plist "com.apple.Safari.ContentPageGroupIdentifier.WebKit2DeveloperExtrasEnabled" -bool true
+defaults write NSGlobalDomain WebKitDeveloperExtras -bool true
+
+###############################################################################
+# iTerm 2                                                      #
+###############################################################################
+
+# Don’t display the annoying prompt when quitting iTerm
+defaults write com.googlecode.iterm2 PromptOnQuit -bool false
+
+###############################################################################
+# Activity Monitor                                                            #
+###############################################################################
+
+# Show the main window when launching Activity Monitor
+defaults write com.apple.ActivityMonitor OpenMainWindow -bool true
+
+# Visualize CPU usage in the Activity Monitor Dock icon
+defaults write com.apple.ActivityMonitor IconType -int 5
+
+# Show all processes in Activity Monitor
+defaults write com.apple.ActivityMonitor ShowCategory -int 0
+
+# Sort Activity Monitor results by CPU usage
+defaults write com.apple.ActivityMonitor SortColumn -string "CPUUsage"
+defaults write com.apple.ActivityMonitor SortDirection -int 0
+
+###############################################################################
+# Kill affected applications                                                  #
+###############################################################################
+
+for app in "Activity Monitor" \
+	"Dock" \
+	"Finder" \
+	"Safari" \
+	"SystemUIServer"; do
+	killall "${app}" &> /dev/null
+done
+echo "Done. Note that some of these changes require a logout/restart to take effect."
