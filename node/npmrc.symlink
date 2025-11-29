@@ -1,14 +1,11 @@
 # npm configuration
 # Public settings only - sensitive data goes in ~/.npmrc.local
 
+# Global package path
+prefix=$HOME/.npm-global
+
 # Use faster registry (optional)
 # registry=https://registry.npmmirror.com
-
-# Save exact versions
-save-exact=true
-
-# Don't save to package.json automatically
-save=false
 
 # Increase timeout
 fetch-timeout=60000
@@ -19,4 +16,3 @@ progress=true
 # Include ~/.npmrc.local if it exists (for auth tokens, etc.)
 # Note: npm doesn't support includes, so this is just a reminder
 # Actual sensitive config should be in ~/.npmrc.local
-
