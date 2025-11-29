@@ -46,6 +46,130 @@ setup_gitconfig () {
     sed -e "s/AUTHORNAME/$git_authorname/g" -e "s/AUTHOREMAIL/$git_authoremail/g" -e "s/GIT_CREDENTIAL_HELPER/$git_credential/g" git/gitconfig.local.symlink.example > git/gitconfig.local.symlink
 
     success 'gitconfig'
+  else
+    success 'Git already set up'
+  fi
+}
+
+setup_ssh_key () {
+  local ssh_key="$HOME/.ssh/id_ed25519"
+  
+  if ! [ -f "$ssh_key" ]
+  then
+    info 'setup SSH key'
+    
+    user ' - Generate SSH key? [y/n]'
+    read -e ssh_input
+    
+    case "$ssh_input" in
+      y|Y|yes|YES)
+        user ' - Enter SSH key comment (usually your email)'
+        read -e ssh_comment
+        
+        # Create .ssh directory if it doesn't exist
+        mkdir -p "$HOME/.ssh"
+        chmod 700 "$HOME/.ssh"
+        
+        # Generate ED25519 key
+        ssh-keygen -t ed25519 -f "$ssh_key" -C "$ssh_comment" -N ""
+        
+        success "SSH key generated at $ssh_key"
+        
+        # Display public key and add to ssh-agent
+        echo ''
+        info 'Adding SSH key to ssh-agent'
+        eval "$(ssh-agent -s)" > /dev/null 2>&1
+        
+        if [ "$(uname -s)" == "Darwin" ]
+        then
+          ssh-add --apple-use-keychain "$ssh_key"
+        else
+          ssh-add "$ssh_key"
+        fi
+        
+        success 'SSH key added to agent'
+        
+        # Show public key
+        echo ''
+        echo "  Your public SSH key:"
+        echo ''
+        sed 's/^/    /' "$ssh_key.pub"
+        echo ''
+        user ' - Add this key to GitHub, GitLab, or Bitbucket?'
+        user '   GitHub:  https://github.com/settings/keys'
+        user '   GitLab:  https://gitlab.com/-/profile/keys'
+        user '   Bitbucket: https://bitbucket.org/account/settings/ssh-keys/'
+        echo ''
+        ;;
+      n|N|no|NO|"")
+        success 'skipped SSH key generation'
+        ;;
+    esac
+  else
+    success 'SSH key already exists'
+  fi
+}
+
+setup_ssh_config () {
+  local ssh_config_src="$DOTFILES_ROOT/ssh/config.symlink"
+  local ssh_config_dst="$HOME/.ssh/config"
+
+  if [ -f "$ssh_config_src" ]
+  then
+    # If dst is a symlink pointing to the correct source, skip quietly
+    if [ -L "$ssh_config_dst" ]; then
+      local currentSrc
+      currentSrc="$(readlink "$ssh_config_dst")"
+      if [ "$currentSrc" == "$ssh_config_src" ]; then
+        return
+      fi
+    fi
+
+    info 'setup SSH config'
+
+    mkdir -p "$HOME/.ssh"
+
+    # If dst is a symlink pointing to a different source, back it up
+    if [ -L "$ssh_config_dst" ]; then
+      mv "$ssh_config_dst" "${ssh_config_dst}.backup"
+      success "moved $ssh_config_dst to ${ssh_config_dst}.backup"
+    elif [ -e "$ssh_config_dst" ]; then
+      # If a regular file/dir exists, back it up
+      mv "$ssh_config_dst" "${ssh_config_dst}.backup"
+      success "moved $ssh_config_dst to ${ssh_config_dst}.backup"
+    fi
+
+    ln -s "$ssh_config_src" "$ssh_config_dst"
+    success "SSH config symlink created"
+  fi
+}
+
+setup_proxy () {
+  if ! [ -f proxy/env.local ]
+  then
+    info 'setup proxy'
+
+    user ' - Enable proxy? [y=default(127.0.0.1:7890)/n=no/custom URL]'
+    read -e proxy_input
+
+    case "$proxy_input" in
+      y|Y|yes|YES)
+        # Use default proxy
+        proxy_url="http://127.0.0.1:7890"
+        sed -e "s|PROXY_URL_VALUE|$proxy_url|g" proxy/env.local.example > proxy/env.local
+        success "proxy configured: $proxy_url"
+        ;;
+      n|N|no|NO|"")
+        # Skip proxy configuration
+        success 'skipped proxy configuration'
+        ;;
+      *)
+        # Custom URL
+        proxy_url="$proxy_input"
+        sed -e "s|PROXY_URL_VALUE|$proxy_url|g" proxy/env.local.example > proxy/env.local
+        success "proxy configured: $proxy_url"
+        ;;
+    esac
   fi
 }
 
@@ -130,14 +254,38 @@ install_dotfiles () {
 
   local overwrite_all=false backup_all=false skip_all=false
 
-  for src in $(find -H "$DOTFILES_ROOT" -maxdepth 2 -name '*.symlink' -not -path '*.git*')
+  for src in $(find -H "$DOTFILES_ROOT" -maxdepth 2 -name '*.symlink' -not -path '*.git*' -not -path "$DOTFILES_ROOT/ssh/*")
   do
-    dst="$HOME/.$(basename "${src%.*}")"
+    # If the symlink is under the ssh directory, map it to ~/.ssh/<name>
+    if [[ "$src" == "$DOTFILES_ROOT/ssh"/* ]]; then
+      dst="$HOME/.ssh/$(basename "${src%.*}")"
+    else
+      # Default behaviour: map to top-level dotfile, e.g. node/yarnrc.symlink -> ~/.yarnrc
+      dst="$HOME/.$(basename "${src%.*}")"
+    fi
+
     link_file "$src" "$dst"
   done
 }
 
+install_zinit () {
+  local ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
+  
+  if [ ! -d "$ZINIT_HOME" ]; then
+    info 'installing Zinit'
+    mkdir -p "$(dirname $ZINIT_HOME)"
+    git clone https://github.com/zdharma-continuum/zinit.git "$ZINIT_HOME"
+    success 'Zinit installed'
+  else
+    success 'Zinit already installed'
+  fi
+}
+
 setup_gitconfig
+setup_ssh_key
+setup_ssh_config
+setup_proxy
+install_zinit
 install_dotfiles
 
 # If we're on a Mac, let's install and setup homebrew.
