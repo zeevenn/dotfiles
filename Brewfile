@@ -1,7 +1,5 @@
 cask_args appdir: '/Applications'
 
-tap 'homebrew/bundle'
-
 # Shell enhancements
 brew 'atuin'              # Better shell history
 brew 'zoxide'             # Smarter cd command
