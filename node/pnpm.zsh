@@ -10,4 +10,3 @@ alias pt='pnpm test'
 alias pb='pnpm build'
 alias pi='pnpm install'
 alias pls='pnpm list --depth=0'
-
