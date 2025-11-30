@@ -17,9 +17,9 @@ brew 'yt-dlp'             # YouTube downloader
 
 # GUI applications
 cask 'iterm2'             # Terminal emulator
-cask 'ghostty'            # Terminal emulator
 cask 'notion'             # Note-taking app
 cask 'raycast'            # Productivity launcher
 cask 'wechat'             # Messaging app
 cask 'visual-studio-code' # Code editor
 cask 'snipaste'           # Screenshot tool
+cask 'pearcleaner'        # System cleaner
