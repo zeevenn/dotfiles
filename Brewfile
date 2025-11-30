@@ -9,6 +9,7 @@ brew 'eza'                # Modern ls replacement
 # Development tools       
 brew 'fnm'                # Fast Node Manager
 brew 'watchman'           # File watcher for React Native
+brew 'uv'                # Python package and project manager
 
 # System tools
 brew 'imagemagick'        # Image processing
