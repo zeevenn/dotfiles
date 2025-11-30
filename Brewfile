@@ -15,6 +15,7 @@ brew 'uv'                # Python package and project manager
 brew 'imagemagick'        # Image processing
 brew 'wget'               # Network downloader
 brew 'yt-dlp'             # YouTube downloader
+brew 'grc'                # Colorize command output
 
 # GUI applications
 cask 'iterm2'             # Terminal emulator
