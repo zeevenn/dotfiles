@@ -9,5 +9,8 @@ cd "$(dirname $0)"/..
 echo "› brew bundle"
 brew bundle
 
+# garentee permissions
+find . -name install.sh -exec chmod +x {} \;
+
 # find the installers and run them iteratively
 find . -name install.sh | while read installer ; do sh -c "${installer}" ; done
