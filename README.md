@@ -1,35 +1,36 @@
 # dotfiles
 
-My personal dotfiles for macOS development. Optimized for fast shell startup and efficient development workflow.
+SSH and Zsh configuration, macOS defaults, and development environment setup(node, python, proxy and etc.). 
 
 Inspired by [Zach Holman](https://github.com/holman)'s [dotfiles](https://github.com/holman/dotfiles).
 
-## Features
+## topical
 
-- 🚀 **Fast Shell Startup** - ~0.2s with Zinit and lazy loading
-- 🎯 **Topical Organization** - Everything organized by topic (git, node, python, etc.)
-- 🔌 **Plugin Management** - Zinit for modern Zsh plugin management
-- 🛠️ **Complete Dev Stack** - Node.js, Python, React Native, Ruby, and more
-- 🔒 **Secure** - Sensitive data kept out of version control
-- 🔄 **Easy Sync** - Sync your configuration across multiple machines
+Everything's built around topic areas. If you're adding a new area to your forked dotfiles — say, "Java" — you can simply add a `java` directory and put files in there. 
+
+And some special filenames have special meanings:
+
+- **bin/**: Anything in `bin/` will get added to your `$PATH`
+- **topic/\*.zsh**: Any `.zsh` files get loaded into your environment
+- **topic/path.zsh**: Loaded first to setup `$PATH`
+- **topic/completion.zsh**: Loaded last to setup autocomplete
+- **topic/\*.symlink**: Gets symlinked to `$HOME` (e.g., `gitconfig.symlink` → `~/.gitconfig`)
+- **topic/install.sh**: Executed when you run `script/install`
 
 ## Quick Start
 
-### Install
+### Bootstrap
 
 ```bash
-# Clone this repository
 git clone https://github.com/YOUR_USERNAME/dotfiles.git ~/.dotfiles
 cd ~/.dotfiles
 
 # Run the bootstrap script
 script/bootstrap
-```
 
-This will:
-1. Install Zinit (Zsh plugin manager)
-2. Create symlinks for all `.symlink` files to your home directory
-3. Set up git configuration (will prompt for name and email)
+# restart
+exec zsh
+```
 
 ### Install Dependencies
 
@@ -41,51 +42,15 @@ brew bundle
 script/install
 ```
 
-## What's Inside
+### Sync Dotfiles
 
-### Core
+If you want to sync your dotfiles with the latest version from the original repository, run `dot`, you can find this script in `bin/`.
 
-- **zsh/** - Shell configuration with Zinit plugins
-  - Fast startup with lazy loading
-  - Modern completions and syntax highlighting
-  - Custom aliases and functions
-- **git/** - Git configuration and aliases
-- **bin/** - Useful scripts and tools
+```bash
+dot
+```
 
-### Development Tools
-
-- **node/** - Node.js, npm, yarn, pnpm configuration
-  - fnm for fast Node version management
-  - Package manager aliases
-- **python/** - Python and uv configuration
-- **ruby/** - Ruby and rbenv configuration (lazy loaded)
-
-### Mobile Development
-
-- **react-native/** - React Native shortcuts and aliases
-- **android/** - Android SDK environment
-- **java/** - Java environment setup
-- **xcode/** - Xcode and iOS development
-
-### System
-
-- **macos/** - macOS system defaults
-- **ssh/** - SSH configuration
-- **proxy/** - Proxy settings with easy toggle
-- **homebrew/** - Homebrew installation and configuration
-
-## Structure
-
-### Special Files
-
-- **bin/**: Anything in `bin/` will get added to your `$PATH`
-- **topic/\*.zsh**: Any `.zsh` files get loaded into your environment
-- **topic/path.zsh**: Loaded first to setup `$PATH`
-- **topic/completion.zsh**: Loaded last to setup autocomplete
-- **topic/\*.symlink**: Gets symlinked to `$HOME` (e.g., `gitconfig.symlink` → `~/.gitconfig`)
-- **topic/install.sh**: Executed when you run `script/install`
-
-### Zinit Plugins
+## ZSH Plugins
 
 Plugins are managed by [Zinit](https://github.com/zdharma-continuum/zinit) in `zsh/zinit.zsh`:
 
@@ -101,26 +66,15 @@ zinit update
 
 ## Customization
 
-### Add Your Own Aliases
-
-Edit `zsh/aliases-custom.zsh`:
-
-```bash
-alias myproject='cd ~/Projects/myproject'
-alias deploy='./scripts/deploy.sh'
-```
-
 ### Private Configuration
 
-Sensitive data goes in `~/.localrc` (automatically sourced, not tracked):
+Sensitive data goes in `~/.localrc` (automatically sourced firstly, not tracked):
 
 ```bash
 # ~/.localrc
 export GITHUB_TOKEN="your_token"
 export NPM_TOKEN="your_token"
 ```
-
-See [SENSITIVE_DATA.md](SENSITIVE_DATA.md) for more details.
 
 ### Add New Topics
 
@@ -132,101 +86,6 @@ Create a new directory (e.g., `rust/`) and add files:
 - `rust/cargo.symlink` - Symlink to `~/.cargo`
 
 They'll be automatically loaded!
-
-## Maintenance
-
-### Daily Update
-
-```bash
-dot
-```
-
-This will:
-- Update Homebrew and packages
-- Update Zinit plugins
-- Update dotfiles from git
-
-### Manual Commands
-
-```bash
-# Update Zinit plugins only
-zinit update
-
-# Update Homebrew
-brew update && brew upgrade
-
-# Update dotfiles
-cd ~/.dotfiles && git pull
-```
-
-## Key Commands
-
-### Shell
-
-- `reload` - Reload shell configuration
-- `..` / `...` - Navigate up directories
-- `gs`, `ga`, `gc`, `gp`, `gl` - Git shortcuts
-
-### React Native
-
-- `ios` - Open iOS Simulator
-- `rnios` - Run on iOS
-- `rnandroid` - Run on Android
-- `metro` - Start Metro bundler
-- `pod` - Install iOS dependencies
-
-### Tools
-
-- `ls`, `ll`, `la` - Enhanced with `eza`
-- `cd` - Enhanced with `zoxide` (smart jumps)
-
-## Performance
-
-Shell startup comparison:
-
-| Configuration | Startup Time |
-|---------------|--------------|
-| Oh My Zsh     | ~1.5s        |
-| This setup    | ~0.2s ⚡     |
-
-Improvements from:
-- Zinit with deferred loading (80%)
-- Lazy loading fnm, rbenv, etc. (15%)
-- Minimal plugin usage (5%)
-
-## Troubleshooting
-
-### Shell is slow
-
-```bash
-# Check what's taking time
-time zsh -i -c exit
-
-# Profile startup
-zsh -xv 2>&1 | less
-```
-
-### Zinit not found
-
-```bash
-# Reinstall Zinit
-cd ~/.dotfiles
-script/bootstrap
-```
-
-### Plugins not working
-
-```bash
-# Reinstall plugins
-zinit delete --all
-zinit update
-```
-
-## Credits
-
-- [Zach Holman](https://github.com/holman) - Original dotfiles structure
-- [Zinit](https://github.com/zdharma-continuum/zinit) - Plugin manager
-- [Holman dotfiles](https://github.com/holman/dotfiles) - Inspiration
 
 ## License
 
