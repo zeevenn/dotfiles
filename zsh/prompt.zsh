@@ -49,11 +49,13 @@ prompt_status() {
 }
 
 export PROMPT='$(prompt_status) $(current_time) $(directory_name) $(git_prompt_info)$(git_dirty_status) '
-set_prompt () {
-  export RPROMPT="%{$fg_bold[cyan]%}%{$reset_color%}"
+
+# Use zsh hook system, so it won't overwrite VS Code's shell integration
+autoload -U add-zsh-hook
+
+# precmd hook: execute before each command prompt
+_dotfiles_precmd() {
+  title "zsh" "%m" "%55<...<%~"
 }
 
-precmd() {
-  title "zsh" "%m" "%55<...<%~"
-  set_prompt
-}
+add-zsh-hook precmd _dotfiles_precmd
