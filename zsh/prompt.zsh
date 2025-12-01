@@ -30,9 +30,9 @@ git_prompt_info () {
     
     local branch_color
     if [[ $number -gt 0 ]]; then
-      branch_color="%{$fg[magenta]%}"    # unpushed commits
+      branch_color="%{$fg[red]%}"    # unpushed commits
     else
-      branch_color="%{$fg[cyan]%}"       # pushed/clean branch
+      branch_color="%{$fg[green]%}"  # pushed/clean branch
     fi
     
     if [[ $number -gt 0 ]]; then
@@ -48,7 +48,7 @@ directory_name() {
 }
 
 current_time() {
-  echo "\033[1;92m$(date +%H:%M)\033[0m"
+  echo "%{$fg[green]%}$(date +%H:%M)%{$reset_color%}"
 }
 
 # Prompt status indicator: changes color based on last command exit code
