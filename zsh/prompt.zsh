@@ -13,48 +13,42 @@ git_branch() {
   echo $($git symbolic-ref HEAD 2>/dev/null | awk -F/ {'print $NF'})
 }
 
-git_dirty() {
+git_dirty_status() {
   if git rev-parse --is-inside-work-tree &>/dev/null; then
-    if [[ -z "$(git status --porcelain)" ]]; then
-      echo "on %{$fg_bold[green]%}$(git_prompt_info)%{$reset_color%}"
-    else
-      echo "on %{$fg_bold[red]%}$(git_prompt_info)%{$reset_color%}"
+    if [[ -n "$(git status --porcelain)" ]]; then
+      echo " %{$fg[yellow]%}✗%{$reset_color%}"
     fi
   fi
 }
 
 git_prompt_info () {
- ref=$($git symbolic-ref HEAD 2>/dev/null) || return
-# echo "(%{\e[0;33m%}${ref#refs/heads/}%{\e[0m%})"
- echo "${ref#refs/heads/}"
-}
-
-# This assumes that you always have an origin named `origin`, and that you only
-# care about one specific origin. If this is not the case, you might want to use
-# `$git cherry -v @{upstream}` instead.
-need_push () {
-  if [ $($git rev-parse --is-inside-work-tree 2>/dev/null) ]
-  then
+  if git rev-parse --is-inside-work-tree &>/dev/null; then
+    ref=$($git symbolic-ref HEAD 2>/dev/null) || return
+    branch="${ref#refs/heads/}"
+    
     number=$($git cherry -v origin/$(git symbolic-ref --short HEAD) 2>/dev/null | wc -l | bc)
-
-    if [[ $number == 0 ]]
-    then
-      echo " "
+    if [[ $number -gt 0 ]]; then
+      echo "%{$fg_bold[blue]%}git:(%{$fg[red]%}${branch} +${number}%{$fg_bold[blue]%})%{$reset_color%}"
     else
-      echo " with %{$fg_bold[magenta]%}$number unpushed%{$reset_color%}"
+      echo "%{$fg_bold[blue]%}git:(%{$fg[red]%}${branch}%{$fg_bold[blue]%})%{$reset_color%}"
     fi
   fi
 }
 
 directory_name() {
-  echo "%{$fg_bold[cyan]%}%1/%\/%{$reset_color%}"
+  echo "%{$fg_bold[cyan]%}%1/%{$reset_color%}"
 }
 
 current_time() {
   echo "\033[1;92m$(date +%H:%M)\033[0m"
 }
 
-export PROMPT=$'\n$(current_time) in $(directory_name) $(git_dirty)$(need_push)\n› '
+# Prompt status indicator: changes color based on last command exit code
+prompt_status() {
+  echo "%(?:%{$fg_bold[green]%}➜:%{$fg_bold[red]%}➜)%{$reset_color%}"
+}
+
+export PROMPT='$(prompt_status) $(current_time) $(directory_name) $(git_prompt_info)$(git_dirty_status) '
 set_prompt () {
   export RPROMPT="%{$fg_bold[cyan]%}%{$reset_color%}"
 }
