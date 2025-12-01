@@ -27,10 +27,18 @@ git_prompt_info () {
     branch="${ref#refs/heads/}"
     
     number=$($git cherry -v origin/$(git symbolic-ref --short HEAD) 2>/dev/null | wc -l | bc)
+    
+    local branch_color
     if [[ $number -gt 0 ]]; then
-      echo "%{$fg_bold[blue]%}git:(%{$fg[red]%}${branch} +${number}%{$fg_bold[blue]%})%{$reset_color%}"
+      branch_color="%{$fg[magenta]%}"    # unpushed commits
     else
-      echo "%{$fg_bold[blue]%}git:(%{$fg[red]%}${branch}%{$fg_bold[blue]%})%{$reset_color%}"
+      branch_color="%{$fg[cyan]%}"       # pushed/clean branch
+    fi
+    
+    if [[ $number -gt 0 ]]; then
+      echo "%{$fg_bold[blue]%}git:(${branch_color}${branch} +${number}%{$fg_bold[blue]%})%{$reset_color%}"
+    else
+      echo "%{$fg_bold[blue]%}git:(${branch_color}${branch}%{$fg_bold[blue]%})%{$reset_color%}"
     fi
   fi
 }
