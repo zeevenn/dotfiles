@@ -13,6 +13,7 @@ alias gc='git commit'
 alias gca='git commit -a'
 alias gcam='git commit -a -m'
 alias gco='git checkout'
+alias gcl='git clone'
 alias gcp='git cherry-pick'
 alias gb='git branch'
 alias gst='git status -sb' # upgrade your git if -sb breaks for you. it's fun.
