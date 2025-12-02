@@ -2,7 +2,7 @@
 # Public settings only - sensitive data goes in ~/.localrc
 
 # Global package path
-prefix=$HOME/.npm-global
+prefix=~/.npm-global
 
 # Use faster registry (optional)
 # registry=https://registry.npmmirror.com
