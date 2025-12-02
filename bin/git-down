@@ -1,0 +1,26 @@
+#!/bin/sh
+#
+# git pull alternative
+#
+# Usage: git down
+#
+# - Pulls with rebase and prune
+# - Shows a sexy log of changes pulled down
+#
+# Inspired by Kyle Neath's `git up' alias:
+# http://gist.github.com/249223
+
+set -e
+
+before_pull=$(git rev-parse HEAD)
+
+# Pull with rebase and auto-prune remote branches
+git pull --rebase --prune "$@"
+
+after_pull=$(git rev-parse HEAD)
+
+if [ "$before_pull" != "$after_pull" ]; then
+  echo ""
+  git log --pretty=format:"%Cred%ae %Creset- %C(yellow)%s %Creset(%ar)" "$before_pull".."$after_pull"
+  echo ""
+fi
