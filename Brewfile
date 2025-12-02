@@ -25,3 +25,5 @@ cask 'wechat'             # Messaging app
 cask 'visual-studio-code' # Code editor
 cask 'snipaste'           # Screenshot tool
 cask 'pearcleaner'        # System cleaner
+cask 'loop'               # Window management tool
+cask 'alt-tab'            # App switcher
