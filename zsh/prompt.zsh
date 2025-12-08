@@ -44,7 +44,7 @@ git_prompt_info () {
 }
 
 directory_name() {
-  echo "%{$fg_bold[cyan]%}%1/%{$reset_color%}"
+  echo "%{$fg_bold[cyan]%}%1~%{$reset_color%}"
 }
 
 current_time() {
