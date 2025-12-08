@@ -36,9 +36,9 @@ git_prompt_info () {
     fi
     
     if [[ $number -gt 0 ]]; then
-      echo "%{$fg_bold[blue]%}git:(${branch_color}${branch} +${number}%{$fg_bold[blue]%})%{$reset_color%}"
+      echo " %{$fg_bold[blue]%}git:(${branch_color}${branch} +${number}%{$fg_bold[blue]%})%{$reset_color%}"
     else
-      echo "%{$fg_bold[blue]%}git:(${branch_color}${branch}%{$fg_bold[blue]%})%{$reset_color%}"
+      echo " %{$fg_bold[blue]%}git:(${branch_color}${branch}%{$fg_bold[blue]%})%{$reset_color%}"
     fi
   fi
 }
@@ -56,7 +56,7 @@ prompt_status() {
   echo "%(?:%{$fg_bold[green]%}➜:%{$fg_bold[red]%}➜)%{$reset_color%}"
 }
 
-export PROMPT='$(prompt_status) $(current_time) $(directory_name) $(git_prompt_info)$(git_dirty_status) '
+export PROMPT='$(prompt_status) $(current_time) $(directory_name)$(git_prompt_info)$(git_dirty_status) '
 
 # Use zsh hook system, so it won't overwrite VS Code's shell integration
 autoload -U add-zsh-hook
