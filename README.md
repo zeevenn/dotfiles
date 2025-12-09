@@ -1,10 +1,16 @@
 # dotfiles
 
-SSH and Zsh configuration, macOS defaults, and development environment setup(node, python, proxy and etc.). 
+Mac setup for development. Inspired by [Zach Holman](https://github.com/holman)'s [dotfiles](https://github.com/holman/dotfiles).
 
-Inspired by [Zach Holman](https://github.com/holman)'s [dotfiles](https://github.com/holman/dotfiles).
+## What's inside
 
-## topical
+- Zsh(plugin by zinit), git, and SSH configuration
+- macOS defaults
+- Development environment setup(node, python, proxy and etc.)
+- React Native development environment setup(ios, android and etc.)
+- Useful commands and softwares
+
+## Topical
 
 Everything's built around topic areas. If you're adding a new area to your forked dotfiles — say, "Java" — you can simply add a `java` directory and put files in there. 
 
