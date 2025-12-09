@@ -10,6 +10,8 @@ brew 'eza'                # Modern ls replacement
 brew 'fnm'                # Fast Node Manager
 brew 'watchman'           # File watcher for React Native
 brew 'uv'                 # Python package and project manager
+brew 'rbenv'              # Ruby version manager
+cask 'zulu@17'            # Java 17 for Android development
 
 # System tools
 brew 'imagemagick'        # Image processing
@@ -26,5 +28,4 @@ cask 'snipaste'           # Screenshot tool
 cask 'pearcleaner'        # System cleaner
 cask 'loop'               # Window management tool
 cask 'betterdisplay'      # HiDPI support
-cask 'zulu@17'            # Java 17 for Android development
 cask 'android-studio'     # Android IDE (need to install SDK manually inside)
