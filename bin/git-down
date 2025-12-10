@@ -21,6 +21,6 @@ after_pull=$(git rev-parse HEAD)
 
 if [ "$before_pull" != "$after_pull" ]; then
   echo ""
-  git --no-pager log --pretty=format:"%Cred%ae %Creset- %C(yellow)%s %Creset(%ar)" "$before_pull".."$after_pull"
+  git --no-pager log --pretty=format:"%C(yellow)%s%Creset %C(cyan)(%ae, %ar)%Creset" "$before_pull".."$after_pull"
   echo ""
 fi
