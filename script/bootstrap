@@ -28,7 +28,7 @@ fail () {
 }
 
 setup_gitconfig () {
-  if ! [ -f git/gitconfig.local.symlink ]
+  if ! [ -f .config/git/config.local ]
   then
     info 'setup gitconfig'
 
@@ -43,7 +43,7 @@ setup_gitconfig () {
     user ' - What is your github author email?'
     read -e git_authoremail
 
-    sed -e "s/AUTHORNAME/$git_authorname/g" -e "s/AUTHOREMAIL/$git_authoremail/g" -e "s/GIT_CREDENTIAL_HELPER/$git_credential/g" git/gitconfig.local.symlink.example > git/gitconfig.local.symlink
+    sed -e "s/AUTHORNAME/$git_authorname/g" -e "s/AUTHOREMAIL/$git_authoremail/g" -e "s/GIT_CREDENTIAL_HELPER/$git_credential/g" .config/git/config.local.example > .config/git/config.local
 
     success 'gitconfig'
   else
@@ -268,6 +268,27 @@ install_dotfiles () {
   done
 }
 
+install_config_dirs () {
+  info 'installing XDG config directories'
+
+  # Create ~/.config if it doesn't exist
+  mkdir -p "$HOME/.config"
+
+  # Link each directory in .config/ to ~/.config/
+  if [ -d "$DOTFILES_ROOT/.config" ]; then
+    for src_dir in "$DOTFILES_ROOT/.config"/*/
+    do
+      # Skip if not a directory (shouldn't happen with */ but safe)
+      [ -d "$src_dir" ] || continue
+      
+      local config_name=$(basename "$src_dir")
+      local dst="$HOME/.config/$config_name"
+      
+      link_file "$src_dir" "$dst"
+    done
+  fi
+}
+
 install_zinit () {
   local ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
   
@@ -287,6 +308,7 @@ setup_ssh_config
 setup_proxy
 install_zinit
 install_dotfiles
+install_config_dirs
 
 # If we're on a Mac, let's install and setup homebrew.
 if [ "$(uname -s)" == "Darwin" ]
