@@ -271,6 +271,8 @@ install_dotfiles () {
 install_config_dirs () {
   info 'installing XDG config directories'
 
+  local overwrite_all=false backup_all=false skip_all=false
+
   # Create ~/.config if it doesn't exist
   mkdir -p "$HOME/.config"
 
