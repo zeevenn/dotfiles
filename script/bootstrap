@@ -281,6 +281,9 @@ install_config_dirs () {
       # Skip if not a directory (shouldn't happen with */ but safe)
       [ -d "$src_dir" ] || continue
       
+      # Remove trailing slash for consistency
+      src_dir="${src_dir%/}"
+
       local config_name=$(basename "$src_dir")
       local dst="$HOME/.config/$config_name"
       
