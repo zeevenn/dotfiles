@@ -60,6 +60,10 @@ brew update
 echo "› brew upgrade"
 brew upgrade
 
+# Create/update symlinks
+echo "› script/link"
+$ZSH/script/link
+
 # Install software
 echo "› script/install"
 $ZSH/script/install
