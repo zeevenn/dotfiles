@@ -6,6 +6,10 @@ brew 'zoxide'             # Smarter cd command
 brew 'fzf'                # Fuzzy finder
 brew 'eza'                # Modern ls replacement
 brew 'bat'                # Better cat with syntax highlighting
+brew 'ripgrep'            # Fast grep (nvim dependency)
+brew 'fd'                 # Fast find (nvim dependency)
+brew 'lazygit'            # Git TUI (nvim integration)
+brew 'nvim'               # Neovim
 
 # Development tools       
 brew 'fnm'                # Fast Node Manager
