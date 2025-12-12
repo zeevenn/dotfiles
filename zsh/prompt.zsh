@@ -155,7 +155,7 @@ _build_prompt_string() {
   status_color="%(?:%{$fg_bold[green]%}➜:%{$fg_bold[red]%}➜)%{$reset_color%}"
   
   # Current time (cached, updated in precmd)
-  current_time="%{$fg[green]%}${_prompt_time}%{$reset_color%}"
+  current_time="%{$fg_bold[green]%}${_prompt_time}%{$reset_color%}"
   
   # Directory name (using zsh built-in, very fast)
   dir_name="%{$fg_bold[cyan]%}%1~%{$reset_color%}"
