@@ -5,6 +5,7 @@ brew 'atuin'              # Better shell history
 brew 'zoxide'             # Smarter cd command
 brew 'fzf'                # Fuzzy finder
 brew 'eza'                # Modern ls replacement
+brew 'bat'                # Better cat with syntax highlighting
 
 # Development tools       
 brew 'fnm'                # Fast Node Manager
