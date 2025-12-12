@@ -20,7 +20,7 @@ brew 'yt-dlp'             # YouTube downloader
 brew 'grc'                # Colorize command output
 
 # GUI applications
-cask 'iterm2'             # Terminal emulator
+cask 'ghostty'            # Terminal emulator
 cask 'notion'             # Note-taking app
 cask 'wechat'             # Messaging app
 cask 'visual-studio-code' # Code editor
