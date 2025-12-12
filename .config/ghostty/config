@@ -1,2 +1,6 @@
 font-size = 14
 theme = Mirage
+
+font-family = ""
+font-family = "JetBrains Mono"
+font-codepoint-map = "U+2700-U+27BF=Zapf Dingbats"
