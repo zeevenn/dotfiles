@@ -194,14 +194,17 @@ typeset -g _prompt_time=""
 
 # Update git cache and build prompt string in precmd hook
 _dotfiles_precmd() {
-  local current_dir
+  local current_dir current_branch
   current_dir=$(pwd)
   
   # Update time (fast, no external command needed in zsh)
   _prompt_time=$(strftime "%H:%M" $EPOCHSECONDS)
   
-  # Update cache if directory changed
-  if [[ "$current_dir" != "$_git_prompt_last_dir" ]]; then
+  # Quick branch check (very fast, reads from .git/HEAD file)
+  current_branch=$($git symbolic-ref --short HEAD 2>/dev/null)
+  
+  # Update cache if directory changed OR branch changed
+  if [[ "$current_dir" != "$_git_prompt_last_dir" ]] || [[ "$current_branch" != "${_git_prompt_cache[branch]}" ]]; then
     _git_prompt_last_dir="$current_dir"
     # Fast update first, then full update in background
     _update_git_prompt_cache_fast
