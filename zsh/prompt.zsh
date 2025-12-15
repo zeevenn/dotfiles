@@ -14,39 +14,8 @@ fi
 typeset -gA _git_prompt_cache
 _git_prompt_cache=()
 
-# Update git prompt cache (called asynchronously or on directory change)
-# Fast version: only updates branch and basic info
-_update_git_prompt_cache_fast() {
-  local git_dir branch ref
-  git_dir=$($git rev-parse --git-dir 2>/dev/null)
-  
-  if [[ -z "$git_dir" ]]; then
-    _git_prompt_cache=()
-    return
-  fi
-  
-  # Get branch name (fast)
-  ref=$($git symbolic-ref --short HEAD 2>/dev/null)
-  if [[ -z "$ref" ]]; then
-    _git_prompt_cache=()
-    return
-  fi
-  
-  branch="$ref"
-  
-  # Quick dirty check (fast)
-  local dirty
-  dirty=$($git diff --quiet --exit-code 2>/dev/null && $git diff --quiet --cached --exit-code 2>/dev/null && echo "clean" || echo "dirty")
-  
-  _git_prompt_cache[branch]="$branch"
-  _git_prompt_cache[dirty]="$dirty"
-  _git_prompt_cache[git_dir]="$git_dir"
-  # Set unpushed to 0 initially, will be updated asynchronously
-  _git_prompt_cache[unpushed]="0"
-}
-
-# Full update including slow operations (unpushed commits)
-_update_git_prompt_cache_full() {
+# Update git prompt cache (synchronous, all info at once)
+_update_git_prompt_cache() {
   local git_dir branch ref unpushed_count dirty
   git_dir=$($git rev-parse --git-dir 2>/dev/null)
   
@@ -55,6 +24,7 @@ _update_git_prompt_cache_full() {
     return
   fi
   
+  # Get branch name
   ref=$($git symbolic-ref --short HEAD 2>/dev/null)
   if [[ -z "$ref" ]]; then
     _git_prompt_cache=()
@@ -63,12 +33,11 @@ _update_git_prompt_cache_full() {
   
   branch="$ref"
   
-  # Check for unpushed commits (slower operation)
+  # Check for unpushed commits
   local upstream
   upstream=$($git rev-parse --abbrev-ref --symbolic-full-name @{u} 2>/dev/null)
   if [[ -n "$upstream" ]]; then
-    # Use --count with limit for better performance
-    unpushed_count=$($git rev-list --count @{u}..HEAD 2>/dev/null | head -1)
+    unpushed_count=$($git rev-list --count @{u}..HEAD 2>/dev/null)
     [[ -z "$unpushed_count" ]] && unpushed_count=0
   else
     unpushed_count=0
@@ -94,10 +63,7 @@ git_prompt_info() {
   
   # Check if cache needs update (git dir changed or cache empty)
   if [[ "$current_git_dir" != "${_git_prompt_cache[git_dir]}" ]] || [[ -z "${_git_prompt_cache[branch]}" ]]; then
-    # Fast update first (non-blocking)
-    _update_git_prompt_cache_fast
-    # Trigger full update in background
-    (_update_git_prompt_cache_full) &!
+    _update_git_prompt_cache
   fi
   
   branch="${_git_prompt_cache[branch]}"
@@ -194,21 +160,30 @@ typeset -g _prompt_time=""
 
 # Update git cache and build prompt string in precmd hook
 _dotfiles_precmd() {
-  local current_dir current_branch
+  local current_dir current_branch git_head_file
   current_dir=$(pwd)
   
   # Update time (fast, no external command needed in zsh)
   _prompt_time=$(strftime "%H:%M" $EPOCHSECONDS)
   
-  # Quick branch check (very fast, reads from .git/HEAD file)
-  current_branch=$($git symbolic-ref --short HEAD 2>/dev/null)
+  # Quick branch check by reading .git/HEAD directly (no subprocess, instant)
+  # Use cached git_dir if available, otherwise try current dir
+  current_branch=""
+  if [[ -n "${_git_prompt_cache[git_dir]}" ]]; then
+    git_head_file="${_git_prompt_cache[git_dir]}/HEAD"
+    if [[ -f "$git_head_file" ]]; then
+      local head_content
+      head_content=$(<"$git_head_file")
+      if [[ "$head_content" == ref:\ refs/heads/* ]]; then
+        current_branch="${head_content#ref: refs/heads/}"
+      fi
+    fi
+  fi
   
   # Update cache if directory changed OR branch changed
   if [[ "$current_dir" != "$_git_prompt_last_dir" ]] || [[ "$current_branch" != "${_git_prompt_cache[branch]}" ]]; then
     _git_prompt_last_dir="$current_dir"
-    # Fast update first, then full update in background
-    _update_git_prompt_cache_fast
-    (_update_git_prompt_cache_full) &!
+    _update_git_prompt_cache
   fi
   
   # Build prompt string from cache (no git commands, instant)
@@ -223,7 +198,7 @@ _dotfiles_precmd() {
 add-zsh-hook precmd _dotfiles_precmd
 
 # Initialize cache and prompt on first load
-_update_git_prompt_cache_fast
+_update_git_prompt_cache
 _prompt_time=$(strftime "%H:%M" $EPOCHSECONDS)
 _build_prompt_string
 PROMPT="$_prompt_string"
