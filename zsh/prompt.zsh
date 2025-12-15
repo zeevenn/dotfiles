@@ -157,11 +157,12 @@ autoload -U add-zsh-hook
 # Track current directory and commit to detect changes
 typeset -g _git_prompt_last_dir=""
 typeset -g _git_prompt_last_head=""
+typeset -g _git_prompt_last_remote=""
 typeset -g _prompt_time=""
 
 # Update git cache and build prompt string in precmd hook
 _dotfiles_precmd() {
-  local current_dir current_branch current_head git_head_file git_ref_file
+  local current_dir current_branch current_head current_remote git_head_file git_ref_file git_remote_file
   current_dir=$(pwd)
   
   # Update time (fast, no external command needed in zsh)
@@ -170,6 +171,7 @@ _dotfiles_precmd() {
   # Quick branch and HEAD check by reading git files directly (no subprocess, instant)
   current_branch=""
   current_head=""
+  current_remote=""
   if [[ -n "${_git_prompt_cache[git_dir]}" ]]; then
     git_head_file="${_git_prompt_cache[git_dir]}/HEAD"
     if [[ -f "$git_head_file" ]]; then
@@ -182,16 +184,23 @@ _dotfiles_precmd() {
         if [[ -f "$git_ref_file" ]]; then
           current_head=$(<"$git_ref_file")
         fi
+        # Read the remote ref (changes after push/pull)
+        git_remote_file="${_git_prompt_cache[git_dir]}/refs/remotes/origin/${current_branch}"
+        if [[ -f "$git_remote_file" ]]; then
+          current_remote=$(<"$git_remote_file")
+        fi
       fi
     fi
   fi
   
-  # Update cache if directory changed OR branch changed OR commit changed
+  # Update cache if directory/branch/commit/remote changed
   if [[ "$current_dir" != "$_git_prompt_last_dir" ]] || \
      [[ "$current_branch" != "${_git_prompt_cache[branch]}" ]] || \
-     [[ "$current_head" != "$_git_prompt_last_head" ]]; then
+     [[ "$current_head" != "$_git_prompt_last_head" ]] || \
+     [[ "$current_remote" != "$_git_prompt_last_remote" ]]; then
     _git_prompt_last_dir="$current_dir"
     _git_prompt_last_head="$current_head"
+    _git_prompt_last_remote="$current_remote"
     _update_git_prompt_cache
   fi
   
