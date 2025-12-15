@@ -154,21 +154,22 @@ _build_prompt_string() {
 # Use zsh hook system, so it won't overwrite VS Code's shell integration
 autoload -U add-zsh-hook
 
-# Track current directory to detect changes
+# Track current directory and commit to detect changes
 typeset -g _git_prompt_last_dir=""
+typeset -g _git_prompt_last_head=""
 typeset -g _prompt_time=""
 
 # Update git cache and build prompt string in precmd hook
 _dotfiles_precmd() {
-  local current_dir current_branch git_head_file
+  local current_dir current_branch current_head git_head_file git_ref_file
   current_dir=$(pwd)
   
   # Update time (fast, no external command needed in zsh)
   _prompt_time=$(strftime "%H:%M" $EPOCHSECONDS)
   
-  # Quick branch check by reading .git/HEAD directly (no subprocess, instant)
-  # Use cached git_dir if available, otherwise try current dir
+  # Quick branch and HEAD check by reading git files directly (no subprocess, instant)
   current_branch=""
+  current_head=""
   if [[ -n "${_git_prompt_cache[git_dir]}" ]]; then
     git_head_file="${_git_prompt_cache[git_dir]}/HEAD"
     if [[ -f "$git_head_file" ]]; then
@@ -176,13 +177,21 @@ _dotfiles_precmd() {
       head_content=$(<"$git_head_file")
       if [[ "$head_content" == ref:\ refs/heads/* ]]; then
         current_branch="${head_content#ref: refs/heads/}"
+        # Read the actual commit hash from refs/heads/<branch>
+        git_ref_file="${_git_prompt_cache[git_dir]}/refs/heads/${current_branch}"
+        if [[ -f "$git_ref_file" ]]; then
+          current_head=$(<"$git_ref_file")
+        fi
       fi
     fi
   fi
   
-  # Update cache if directory changed OR branch changed
-  if [[ "$current_dir" != "$_git_prompt_last_dir" ]] || [[ "$current_branch" != "${_git_prompt_cache[branch]}" ]]; then
+  # Update cache if directory changed OR branch changed OR commit changed
+  if [[ "$current_dir" != "$_git_prompt_last_dir" ]] || \
+     [[ "$current_branch" != "${_git_prompt_cache[branch]}" ]] || \
+     [[ "$current_head" != "$_git_prompt_last_head" ]]; then
     _git_prompt_last_dir="$current_dir"
+    _git_prompt_last_head="$current_head"
     _update_git_prompt_cache
   fi
   
