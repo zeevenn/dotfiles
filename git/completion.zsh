@@ -7,3 +7,11 @@ if test -f $completion
 then
   source $completion
 fi
+
+# Make git aliases use git completion
+# gsw -> git switch, gb -> git branch, etc.
+compdef _git gsw=git-switch
+compdef _git gco=git-checkout
+compdef _git gb=git-branch
+compdef _git gm=git-merge
+compdef _git grb=git-rebase
