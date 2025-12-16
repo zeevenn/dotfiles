@@ -2,7 +2,7 @@
 #
 # git pull alternative
 #
-# Usage: git down
+# Usage: git up
 #
 # - Pulls with rebase and prune
 # - Shows a sexy log of changes pulled down
