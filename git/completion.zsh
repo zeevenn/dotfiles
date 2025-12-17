@@ -10,6 +10,7 @@ fi
 
 # Make git aliases use git completion
 # gsw -> git switch, gb -> git branch, etc.
+compdef _git g='git'
 compdef _git gsw=git-switch
 compdef _git gco=git-checkout
 compdef _git gb=git-branch
