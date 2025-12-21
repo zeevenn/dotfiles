@@ -105,13 +105,6 @@ defaults write com.apple.Safari.plist "com.apple.Safari.ContentPageGroupIdentifi
 defaults write NSGlobalDomain WebKitDeveloperExtras -bool true
 
 ###############################################################################
-# iTerm 2                                                      								#
-###############################################################################
-
-# Don’t display the annoying prompt when quitting iTerm
-defaults write com.googlecode.iterm2 PromptOnQuit -bool false
-
-###############################################################################
 # Activity Monitor                                                            #
 ###############################################################################
 
