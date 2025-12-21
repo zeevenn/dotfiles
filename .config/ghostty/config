@@ -4,3 +4,6 @@ theme = Mirage
 font-family = ""
 font-family = "JetBrainsMono Nerd Font Mono"
 font-codepoint-map = "U+2700-U+27BF=Zapf Dingbats"
+
+confirm-close-surface = false
+quit-after-last-window-closed = true
