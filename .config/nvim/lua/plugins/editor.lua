@@ -1,9 +1,6 @@
 return {
   "folke/snacks.nvim",
   opts = {
-    -- Use mini-indentscope instead
-    indent = { enabled = false },
-
     picker = {
       sources = {
         -- Always show hidden files
