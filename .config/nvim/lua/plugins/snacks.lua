@@ -9,6 +9,10 @@ return {
         },
         explorer = {
           hidden = true,
+          -- Exclude conform.nvim's temporary files
+          exclude = {
+            "**/.conform.*",
+          },
         },
 
         -- Automatically open explorer in project directory
