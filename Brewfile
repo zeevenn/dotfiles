@@ -10,6 +10,7 @@ brew 'ripgrep'            # Fast grep (nvim dependency)
 brew 'fd'                 # Fast find (nvim dependency)
 brew 'lazygit'            # Git TUI (nvim integration)
 brew 'nvim'               # Neovim
+brew 'tmux'               # Terminal multiplexer
 
 # Development tools       
 brew 'fnm'                # Fast Node Manager
