@@ -1,5 +1,14 @@
 return {
-  { "catppuccin/nvim", name = "catppuccin", priority = 1000 },
+  -- Add catppuccin theme
+  { "catppuccin/nvim", name = "catppuccin" },
+
+  -- Configure LazyVim to use catppuccin
+  {
+    "LazyVim/LazyVim",
+    opts = {
+      colorscheme = "catppuccin",
+    },
+  },
 
   {
     "folke/noice.nvim",
