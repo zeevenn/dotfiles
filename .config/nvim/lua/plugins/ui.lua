@@ -31,8 +31,9 @@ return {
       notifier = {
         timeout = 10000,
       },
-      -- Use mini-indentscope instead
-      indent = { enabled = false },
+      indent = {
+        scope = { enabled = false },
+      },
     },
   },
 
