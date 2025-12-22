@@ -4,3 +4,5 @@
 
 -- Disable character hiding for readable
 vim.opt.conceallevel = 0
+
+vim.g.lazyvim_colorscheme = "catppuccin"
