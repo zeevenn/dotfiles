@@ -38,3 +38,4 @@ cask 'android-studio'     # Android IDE (need to install SDK manually inside)
 
 # Font for terminal
 cask 'font-jetbrains-mono-nerd-font'
+cask 'font-noto-sans-cjk-sc'
