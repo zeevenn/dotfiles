@@ -1,8 +1,10 @@
 return {
-  -- Keep original symbol display
+  -- Only render in Avante, not in regular markdown files
   {
     "MeanderingProgrammer/render-markdown.nvim",
-    enabled = false,
+    opts = {
+      file_types = { "Avante" },
+    },
   },
 
   {

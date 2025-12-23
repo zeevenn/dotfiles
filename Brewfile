@@ -1,6 +1,7 @@
 cask_args appdir: '/Applications'
 
 # Shell enhancements
+brew 'curl'               # Update the system curl
 brew 'atuin'              # Better shell history
 brew 'zoxide'             # Smarter cd command
 brew 'fzf'                # Fuzzy finder

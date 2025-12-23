@@ -3,27 +3,32 @@
 # Default: use current directory
 # 
 #  Window 0 (code):           Window 1 (terminal):
-#  ┌──────────────┬──────┐    ┌──────────┬──────────┐
-#  │              │      │    │  Term 1  │  Term 2  │
-#  │              │      │    │          │          │
-#  │     Code     │ AI   │    ├──────────┼──────────┤
-#  │              │      │    │  Term 3  │  Term 4  │
-#  │              │      │    │          │          │
-#  └──────────────┴──────┘    └──────────┴──────────┘
+#  ┌──────────────────────┐    ┌──────────┬──────────┐
+#  │                      │    │  Term 1  │  Term 2  │
+#  │                      │    │          │          │
+#  │        Code          │    ├──────────┼──────────┤
+#  │                      │    │  Term 3  │  Term 4  │
+#  │                      │    │          │          │
+#  └──────────────────────┘    └──────────┴──────────┘
 # 
 
 DIR=${1:-$(pwd)}
 SESSION=$(basename "$DIR" | tr . _)
 
-# Check if session exists
-tmux has-session -t "$SESSION" 2>/dev/null
-if [ $? != 0 ]; then
+# Check if session exists using exact match
+if tmux list-sessions -F '#{session_name}' 2>/dev/null | grep -q "^${SESSION}$"; then
+  SESSION_EXISTS=true
+else
+  SESSION_EXISTS=false
+fi
+
+# If session doesn't exist, create it
+if [ "$SESSION_EXISTS" = "false" ]; then
   # Create new session
   tmux new-session -d -s "$SESSION" -c "$DIR" -n code
 
-  # Window 0: Write code + AI split screen
-  tmux send-keys -t "$SESSION":0 "tmux split-window -h -l 20%" C-m
-  tmux send-keys -t "$SESSION":0.0 "vi ." C-m
+  # Window 0: Code editor (full screen)
+  tmux send-keys -t "$SESSION":0 "vi ." C-m
 
   # Window 1: Terminal four split screen
   tmux new-window -n terminal -t "$SESSION":1
@@ -38,5 +43,11 @@ if [ $? != 0 ]; then
   tmux select-pane -t "$SESSION":0.0
 fi
 
-# Attach to session
-tmux attach -t "$SESSION"
+# Attach or switch to session
+if [ -n "$TMUX" ]; then
+  # Already in tmux, switch to the session
+  tmux switch-client -t "$SESSION"
+else
+  # Not in tmux, attach to the session
+  tmux attach -t "$SESSION"
+fi

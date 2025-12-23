@@ -1,0 +1,5 @@
+# https://code.claude.com/docs/en/settings#environment-variables
+
+# https://github.com/yetone/avante.nvim/blob/main/README_zh.md#%E7%94%A8%E6%B3%95
+# Avante.nvim Bedrock configuration
+# Format: access_key_id,secret_access_key,region[,session_token]
