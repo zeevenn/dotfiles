@@ -16,3 +16,5 @@ window-padding-balance = true
 window-padding-y = 0
 window-padding-x = 0
 
+adjust-cell-height = 5
+
