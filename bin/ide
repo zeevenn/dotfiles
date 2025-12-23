@@ -1,0 +1,42 @@
+#!/bin/bash
+# Usage: ide [path]
+# Default: use current directory
+# 
+#  Window 0 (code):           Window 1 (terminal):
+#  ┌──────────────┬──────┐    ┌──────────┬──────────┐
+#  │              │      │    │  Term 1  │  Term 2  │
+#  │              │      │    │          │          │
+#  │     Code     │ AI   │    ├──────────┼──────────┤
+#  │              │      │    │  Term 3  │  Term 4  │
+#  │              │      │    │          │          │
+#  └──────────────┴──────┘    └──────────┴──────────┘
+# 
+
+DIR=${1:-$(pwd)}
+SESSION=$(basename "$DIR" | tr . _)
+
+# Check if session exists
+tmux has-session -t "$SESSION" 2>/dev/null
+if [ $? != 0 ]; then
+  # Create new session
+  tmux new-session -d -s "$SESSION" -c "$DIR" -n code
+
+  # Window 0: Write code + AI split screen
+  tmux send-keys -t "$SESSION":0 "tmux split-window -h -l 20%" C-m
+  tmux send-keys -t "$SESSION":0.0 "vi ." C-m
+
+  # Window 1: Terminal four split screen
+  tmux new-window -n terminal -t "$SESSION":1
+  tmux split-window -v -t "$SESSION":1
+  tmux select-pane -t "$SESSION":1.0
+  tmux split-window -h -t "$SESSION":1
+  tmux select-pane -t "$SESSION":1.2
+  tmux split-window -h -t "$SESSION":1
+  
+  # Select first window and focus on code pane
+  tmux select-window -t "$SESSION":0
+  tmux select-pane -t "$SESSION":0.0
+fi
+
+# Attach to session
+tmux attach -t "$SESSION"
