@@ -12,7 +12,8 @@ Mac setup for development. Inspired by [Zach Holman](https://github.com/holman)'
 
 ## Topical
 
-Everything's built around topic areas. If you're adding a new area to your forked dotfiles — say, "Java" — you can simply add a `java` directory and put files in there. 
+Everything's built around topic areas. If you're adding a new area to your forked dotfiles — say,
+"Java" — you can simply add a `java` directory and put files in there.
 
 And some special filenames have special meanings:
 
@@ -50,7 +51,8 @@ script/install
 
 ### Sync Dotfiles
 
-If you want to sync your dotfiles with the latest version from the original repository, run `dot`, you can find this script in `bin/`.
+If you want to sync your dotfiles with the latest version from the original repository, run `dot`,
+you can find this script in `bin/`.
 
 ```bash
 dot
