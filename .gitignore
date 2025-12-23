@@ -29,3 +29,6 @@ Thumbs.db
 
 # Zinit plugins cache
 .zinit/
+
+# tmux
+.config/tmux/plugins

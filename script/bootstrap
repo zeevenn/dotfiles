@@ -187,11 +187,25 @@ install_zinit () {
   fi
 }
 
+install_tpm () {
+  local TPM_HOME="$DOTFILES_ROOT/.config/tmux/plugins/tpm"
+  
+  if [ ! -d "$TPM_HOME" ]; then
+    info 'installing TPM (Tmux Plugin Manager)'
+    mkdir -p "$(dirname $TPM_HOME)"
+    git clone https://github.com/tmux-plugins/tpm "$TPM_HOME"
+    success 'TPM installed'
+  else
+    success 'TPM already installed'
+  fi
+}
+
 setup_gitconfig
 setup_ssh_key
 setup_ssh_config
 setup_proxy
 install_zinit
+install_tpm
 
 # Create symlinks for dotfiles and config directories
 "$DOTFILES_ROOT/script/link"
