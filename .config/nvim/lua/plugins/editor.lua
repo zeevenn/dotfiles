@@ -4,14 +4,18 @@ return {
     opts = {
       picker = {
         sources = {
-          -- Always show hidden files
+          -- Always show hidden files, exclude .git and .DS_Store
           files = {
             hidden = true,
+            ignored = true,
+            exclude = { "**/.git", "**/.DS_Store" },
           },
           explorer = {
             hidden = true,
-            -- Exclude conform.nvim's temporary files
+            ignored = true,
             exclude = {
+              "**/.git",
+              "**/.DS_Store",
               "**/.conform.*",
             },
           },
@@ -33,7 +37,7 @@ return {
           },
         },
       },
-    }
+    },
   },
 
   {
