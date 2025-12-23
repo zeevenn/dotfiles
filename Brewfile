@@ -19,6 +19,7 @@ brew 'watchman'           # File watcher for React Native
 brew 'uv'                 # Python package and project manager
 brew 'rbenv'              # Ruby version manager
 cask 'zulu@17'            # Java 17 for Android development
+brew 'awscli'
 
 # System tools
 brew 'imagemagick'        # Image processing
