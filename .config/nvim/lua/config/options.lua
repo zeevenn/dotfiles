@@ -4,3 +4,4 @@
 
 -- Disable character hiding for readable
 vim.opt.conceallevel = 0
+vim.opt.autoread = true

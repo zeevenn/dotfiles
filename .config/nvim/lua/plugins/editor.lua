@@ -11,6 +11,7 @@ return {
             exclude = { "**/.git", "**/.DS_Store" },
           },
           explorer = {
+            auto_close = true,
             hidden = true,
             ignored = true,
             exclude = {
@@ -36,6 +37,15 @@ return {
             end,
           },
         },
+      },
+    },
+    keys = {
+      {
+        "<leader><space>",
+        LazyVim.pick("files", {
+          cwd = LazyVim.root({ git = true }),
+        }),
+        desc = "Find Files (Root Dir)",
       },
     },
   },
