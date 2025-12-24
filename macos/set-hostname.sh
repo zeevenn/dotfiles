@@ -13,14 +13,16 @@
 #
 # None of this really matters in the big scheme of things, but it bothered me.
 
-hostname=$(scutil --get LocalHostName)
+PREFERRED_HOSTNAME="pixel"
 
-# if hostname contains a hyphen and then a number, remove the hyphen and number
-normal_hostname=$(echo "$hostname" | sed 's/-[0-9]*$//')
+local_hostname=$(scutil --get LocalHostName)
+computer_name=$(scutil --get ComputerName)
+hostname=$(scutil --get HostName 2>/dev/null || echo "")
 
-# if our hostname was changed by macOS, change it back
-if [ "$normal_hostname" != "$hostname" ]; then
-  echo "Changing hostname from $hostname to $normal_hostname"
-  scutil --set LocalHostName "$normal_hostname"
-  scutil --set ComputerName "$normal_hostname"
+# Set all hostnames to preferred hostname if any of them differ
+if [ "$local_hostname" != "$PREFERRED_HOSTNAME" ] || [ "$computer_name" != "$PREFERRED_HOSTNAME" ] || [ "$hostname" != "$PREFERRED_HOSTNAME" ]; then
+  echo "Setting hostname to $PREFERRED_HOSTNAME"
+  sudo scutil --set LocalHostName "$PREFERRED_HOSTNAME"
+  sudo scutil --set ComputerName "$PREFERRED_HOSTNAME"
+  sudo scutil --set HostName "$PREFERRED_HOSTNAME"
 fi
