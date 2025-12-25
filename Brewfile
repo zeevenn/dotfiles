@@ -36,7 +36,7 @@ cask 'snipaste'           # Screenshot tool
 cask 'pearcleaner'        # System cleaner
 cask 'loop'               # Window management tool
 cask 'betterdisplay'      # HiDPI support
-cask 'android-studio'     # Android IDE (need to install SDK manually inside)
+cask 'mac-mouse-fix'      # Make Your $10 Mouse Better Than an Apple Trackpad
 
 # Font for terminal
 cask 'font-jetbrains-mono-nerd-font'
