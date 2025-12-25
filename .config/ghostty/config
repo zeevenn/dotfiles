@@ -22,3 +22,5 @@ fullscreen = true
 
 adjust-cell-height = 5
 
+font-feature = -calt
+
