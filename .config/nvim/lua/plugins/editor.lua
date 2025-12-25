@@ -11,7 +11,6 @@ return {
             exclude = { "**/.git", "**/.DS_Store" },
           },
           explorer = {
-            auto_close = true,
             hidden = true,
             ignored = true,
             exclude = {

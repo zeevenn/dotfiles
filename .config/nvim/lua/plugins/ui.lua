@@ -1,6 +1,18 @@
 return {
   -- Add catppuccin theme
-  { "catppuccin/nvim", name = "catppuccin" },
+  {
+    "catppuccin/nvim",
+    name = "catppuccin",
+    opts = {
+      highlight_overrides = {
+        mocha = function()
+          return {
+            ["@variable"] = { fg = "#bbd1ca" },
+          }
+        end,
+      },
+    },
+  },
 
   -- Configure LazyVim to use catppuccin
   {
