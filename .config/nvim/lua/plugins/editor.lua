@@ -4,11 +4,11 @@ return {
     opts = {
       picker = {
         sources = {
-          -- Always show hidden files, exclude .git and .DS_Store
+          -- Always show hidden files, exclude .git, .DS_Store and node_modules
           files = {
             hidden = true,
             ignored = true,
-            exclude = { "**/.git", "**/.DS_Store" },
+            exclude = { "**/.git", "**/.DS_Store", "**/node_modules" },
           },
           explorer = {
             hidden = true,
