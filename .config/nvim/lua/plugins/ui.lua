@@ -7,7 +7,7 @@ return {
       highlight_overrides = {
         mocha = function()
           return {
-            ["@variable"] = { fg = "#bbd1ca" },
+            -- ["@variable"] = { fg = "#bbd1ca" },
           }
         end,
       },
