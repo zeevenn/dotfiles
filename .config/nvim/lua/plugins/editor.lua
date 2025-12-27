@@ -64,6 +64,14 @@ return {
   {
     "sindrets/diffview.nvim",
     cmd = { "DiffviewOpen", "DiffviewClose", "DiffviewToggleFiles", "DiffviewFileHistory" },
+    keys = {
+      { "<leader>gd", "<cmd>DiffviewOpen<cr>", desc = "Open Diffview" },
+      { "<leader>gD", "<cmd>DiffviewClose<cr>", desc = "Close Diffview" },
+      { "<leader>gf", "<cmd>DiffviewFileHistory %<cr>", desc = "File History (current)" },
+      { "<leader>gF", "<cmd>DiffviewFileHistory<cr>", desc = "File History (all)" },
+      { "<leader>gm", "<cmd>DiffviewOpen HEAD<cr>", desc = "Diff against HEAD" },
+      { "<leader>gM", "<cmd>DiffviewOpen main<cr>", desc = "Diff against main" },
+    },
   },
 
   -- Keep scrolloff at the end of file
