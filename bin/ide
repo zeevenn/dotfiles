@@ -2,18 +2,21 @@
 # Usage: ide [path]
 # Default: use current directory
 #
-#  Single window layout:
+#  Two windows layout:
+#
+#  Window 1 (code):
 #  ┌──────────────────────┐
 #  │                      │
-#  │        Code          │  <- vim (zoomed by default)
+#  │        Code          │  <- vim
 #  │                      │
-#  ├──────────┬───────────┤
-#  │  Term 1  │  Term 2   │  <- hidden, toggle with prefix+z
-#  └──────────┴───────────┘
+#  └──────────────────────┘
 #
-#  Tips:
-#  - prefix+z: toggle terminal visibility
-#  - prefix+Alt+2: even-horizontal (re-balance after adding panes)
+#  Window 2 (shell):
+#  ┌──────────────────────┐
+#  │                      │
+#  │       Shell          │
+#  │                      │
+#  └──────────────────────┘
 #
 
 DIR=${1:-$(pwd)}
@@ -28,21 +31,18 @@ fi
 
 # If session doesn't exist, create it
 if [ "$SESSION_EXISTS" = "false" ]; then
-  # Create new session with code pane
-  tmux new-session -d -s "$SESSION" -c "$DIR" -n ide
-
-  # Split: bottom terminal area (20% height)
-  tmux split-window -v -l 20% -t "$SESSION":0 -c "$DIR"
-
-  # Split bottom into 2 horizontal panes
-  tmux split-window -h -t "$SESSION":0.1 -c "$DIR"
+  # Create new session with first window (code)
+  tmux new-session -d -s "$SESSION" -c "$DIR" -n code
 
   # Select code pane and start vim
-  tmux select-pane -t "$SESSION":0.0
-  tmux send-keys -t "$SESSION":0.0 "vi ." C-m
+  tmux select-pane -t "$SESSION":1.1
+  tmux send-keys -t "$SESSION":1.1 "vi ." C-m
 
-  # Zoom the code pane (hide terminals)
-  tmux resize-pane -Z -t "$SESSION":0.0
+  # Create second window (shell)
+  tmux new-window -t "$SESSION":2 -n shell -c "$DIR"
+
+  # Switch back to first window
+  tmux select-window -t "$SESSION":1
 fi
 
 # Attach or switch to session
