@@ -34,6 +34,17 @@ return {
       presets = {
         lsp_doc_border = true,
       },
+      -- Fix command-line message disappearing.
+      -- see: https://github.com/folke/noice.nvim/issues/1097
+      routes = {
+        {
+          view = "notify",
+          filter = {
+            event = "msg_show",
+            kind = "shell_out",
+          },
+        },
+      },
     },
   },
 
