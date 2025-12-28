@@ -33,6 +33,7 @@ return {
       },
       presets = {
         lsp_doc_border = true,
+        bottom_search = false,
       },
       -- Fix command-line message disappearing.
       -- see: https://github.com/folke/noice.nvim/issues/1097
