@@ -13,7 +13,7 @@ brew 'lazygit'            # Git TUI (nvim integration)
 brew 'nvim'               # Neovim
 brew 'tmux'               # Terminal multiplexer
 
-# Development tools       
+# Development tools
 brew 'fnm'                # Fast Node Manager
 brew 'watchman'           # File watcher for React Native
 brew 'uv'                 # Python package and project manager
@@ -27,6 +27,10 @@ brew 'wget'               # Network downloader
 brew 'yt-dlp'             # YouTube downloader
 brew 'grc'                # Colorize command output
 
+# CLI MacOS Input Source Manager
+tap "laishulu/homebrew"
+brew 'macism'
+
 # GUI applications
 cask 'ghostty'            # Terminal emulator
 cask 'notion'             # Note-taking app
@@ -37,6 +41,7 @@ cask 'pearcleaner'        # System cleaner
 cask 'loop'               # Window management tool
 cask 'betterdisplay'      # HiDPI support
 cask 'mac-mouse-fix'      # Make Your $10 Mouse Better Than an Apple Trackpad
+cask 'input-source-pro'   # Auto switch input method
 
 # Font for terminal
 cask 'font-jetbrains-mono-nerd-font'
