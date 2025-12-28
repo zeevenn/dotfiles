@@ -41,7 +41,6 @@ cask 'pearcleaner'        # System cleaner
 cask 'loop'               # Window management tool
 cask 'betterdisplay'      # HiDPI support
 cask 'mac-mouse-fix'      # Make Your $10 Mouse Better Than an Apple Trackpad
-cask 'input-source-pro'   # Auto switch input method
 
 # Font for terminal
 cask 'font-jetbrains-mono-nerd-font'
