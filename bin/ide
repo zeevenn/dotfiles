@@ -11,10 +11,10 @@
 #  │                      │
 #  └──────────────────────┘
 #
-#  Window 2 (shell):
+#  Window 2 (zsh):
 #  ┌──────────────────────┐
 #  │                      │
-#  │       Shell          │
+#  │        zsh           │
 #  │                      │
 #  └──────────────────────┘
 #
@@ -39,7 +39,7 @@ if [ "$SESSION_EXISTS" = "false" ]; then
   tmux send-keys -t "$SESSION":1.1 "vi ." C-m
 
   # Create second window (shell)
-  tmux new-window -t "$SESSION":2 -n shell -c "$DIR"
+  tmux new-window -t "$SESSION":2 -n zsh -c "$DIR"
 
   # Switch back to first window
   tmux select-window -t "$SESSION":1
