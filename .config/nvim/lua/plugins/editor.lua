@@ -82,7 +82,7 @@ return {
 
   -- Keep scrolloff at the end of file
   {
-    'Aasim-A/scrollEOF.nvim',
+    "Aasim-A/scrollEOF.nvim",
     event = "BufReadPost",
     opts = {
       disabled_filetypes = {
