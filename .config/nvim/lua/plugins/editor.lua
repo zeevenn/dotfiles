@@ -81,12 +81,13 @@ return {
   },
 
   -- Keep scrolloff at the end of file
-  -- {
-  --   "Aasim-A/scrollEOF.nvim",
-  --   event = { "CursorMoved", "WinScrolled" },
-  --   opts = {
-  --       "snacks_terminal", -- Fix flickering in LazyGit and terminals
-  --     },
-  --   },
-  -- },
+  {
+    'Aasim-A/scrollEOF.nvim',
+    event = "BufReadPost",
+    opts = {
+      disabled_filetypes = {
+        "snacks_terminal", -- Fix flickering in LazyGit and terminals
+      },
+    },
+  },
 }
