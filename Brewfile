@@ -39,7 +39,6 @@ cask 'visual-studio-code' # Code editor
 cask 'snipaste'           # Screenshot tool
 cask 'pearcleaner'        # System cleaner
 cask 'loop'               # Window management tool
-cask 'betterdisplay'      # HiDPI support
 cask 'mac-mouse-fix'      # Make Your $10 Mouse Better Than an Apple Trackpad
 
 # Font for terminal
