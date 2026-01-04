@@ -26,3 +26,4 @@ adjust-cell-height = 7
 
 font-feature = -calt
 
+macos-option-as-alt = left
