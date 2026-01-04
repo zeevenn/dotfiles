@@ -87,6 +87,7 @@ return {
     opts = {
       disabled_filetypes = {
         "snacks_terminal", -- Fix flickering in LazyGit and terminals
+        "snacks_picker_list", -- Fix flickering in snacks.explorer
       },
     },
   },
