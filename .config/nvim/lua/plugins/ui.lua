@@ -14,6 +14,18 @@ return {
     },
   },
 
+  -- Show almost full path
+  -- https://github.com/LazyVim/LazyVim/discussions/3010#discussioncomment-13666237
+  {
+    "nvim-lualine/lualine.nvim",
+    event = "VeryLazy",
+    opts = function(_, opts)
+      opts.sections.lualine_c[4] = { LazyVim.lualine.pretty_path({
+        length = 6,
+      }) }
+    end,
+  },
+
   -- Configure LazyVim to use catppuccin
   {
     "LazyVim/LazyVim",
