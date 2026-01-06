@@ -4,11 +4,11 @@ Mac setup for development. Inspired by [Zach Holman](https://github.com/holman)'
 
 ## What's inside
 
-- Zsh(plugin by zinit), git, and SSH configuration
-- macOS defaults
-- Development environment setup(node, python, proxy and etc.)
-- React Native development environment setup(ios, android and etc.)
-- Useful commands and softwares
+- **Shell & Terminal**: Zsh (with Zinit plugin manager), Tmux, Ghostty terminal
+- **Editor**: Neovim with complete configuration (Including LSP, Treesitter, Git integration, AI and etc.)
+- **Basic Tools**: Git configuration and SSH setup
+- **Development Tools**: Node.js, Python, Ruby, Docker, React Native
+- **System**: macOS defaults, proxy configuration, useful commands and scripts
 
 ## Topical
 
@@ -32,21 +32,14 @@ And some special filenames have special meanings:
 git clone https://github.com/YOUR_USERNAME/dotfiles.git ~/.dotfiles
 cd ~/.dotfiles
 
-# Run the bootstrap script
+# Run the bootstrap script (setup configs and symlinks)
 script/bootstrap
 
-# restart
-exec zsh
-```
-
-### Install Dependencies
-
-```bash
-# Install Homebrew packages and casks
-brew bundle
-
-# Or use the included script
+# Install dependencies
 script/install
+
+# Now restart shell
+exec zsh
 ```
 
 ### Sync Dotfiles
