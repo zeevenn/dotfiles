@@ -11,3 +11,8 @@ keymap.set("n", "-", "<C-x>", { desc = "Decrement number" })
 keymap.set({ "n", "t" }, "<C-`>", function()
   Snacks.terminal()
 end, { desc = "Switch to terminal" })
+
+-- git open
+keymap.set("n", "<leader>go", function()
+  vim.cmd("!git open")
+end, { desc = "Git Open (repo)" })
