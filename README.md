@@ -10,6 +10,62 @@ Mac setup for development. Inspired by [Zach Holman](https://github.com/holman)'
 - **Development Tools**: Node.js, Python, Ruby, Docker, React Native
 - **System**: macOS defaults, proxy configuration, useful commands and scripts
 
+## Improvements over Holman's dotfiles
+
+This setup improves upon the original with better handling of modern XDG-compliant configurations:
+
+### Dot Directory Linking (`.config/`, `.ssh/`)
+
+**Original Holman approach:**
+- Only supports `*.symlink` files in the root directory
+- No built-in support for XDG Base Directory specification
+- Config directories like `.config/` must be managed manually
+
+**This implementation:**
+- Automatically handles dot directories (starting with `.`)
+- **Always creates target directory as real directory, then symlinks contents individually**
+- Example: `.config/nvim/` → `~/.config/nvim/` (subdirectory symlink)
+- **Why this is better:**
+  - [x] Prevents other apps from polluting your dotfiles repo
+  - [x] Allows non-managed configs to coexist (e.g., `~/.config/github-copilot/`)
+  - [x] Safer: no risk of entire directory being replaced by apps
+  - [x] Follows XDG Base Directory specification
+
+### SSH Configuration
+
+**This implementation adds:**
+- Special handling for `ssh/*.symlink` files → linked to `~/.ssh/`
+- Example: `ssh/config.symlink` → `~/.ssh/config`
+- Keeps SSH keys separate from version control while managing config files
+
+### Directory Structure Example
+
+```
+~/.dotfiles/
+├── .config/
+│   ├── nvim/          → symlinked to ~/.config/nvim/
+│   ├── tmux/          → symlinked to ~/.config/tmux/
+│   └── ghostty/       → symlinked to ~/.config/ghostty/
+└── ssh/
+    └── config.symlink → symlinked to ~/.ssh/config
+```
+
+Result in `$HOME`:
+
+```
+~/
+├── .config/              (real directory, can contain other apps' configs)
+│   ├── nvim/             → ~/.dotfiles/.config/nvim/
+│   ├── tmux/             → ~/.dotfiles/.config/tmux/
+│   ├── ghostty/          → ~/.dotfiles/.config/ghostty/
+│   ├── github-copilot/   (managed by other app, not in dotfiles)
+│   └── ...
+└── .ssh/                 (real directory, contains keys)
+    ├── config            → ~/.dotfiles/ssh/config.symlink
+    ├── id_ed25519        (private key, not in dotfiles)
+    └── ...
+```
+
 ## Topical
 
 Everything's built around topic areas. If you're adding a new area to your forked dotfiles — say,

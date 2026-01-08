@@ -100,48 +100,78 @@ install_dotfiles () {
 
   local overwrite_all=false backup_all=false skip_all=false
 
-  for src in $(find -H "$DOTFILES_ROOT" -maxdepth 2 -name '*.symlink' -not -path '*.git*' -not -path "$DOTFILES_ROOT/ssh/*")
+  # Process top-level *.symlink files
+  for src in "$DOTFILES_ROOT"/*.symlink
   do
-    # If the symlink is under the ssh directory, map it to ~/.ssh/<name>
-    if [[ "$src" == "$DOTFILES_ROOT/ssh"/* ]]; then
-      dst="$HOME/.ssh/$(basename "${src%.*}")"
+    [ -f "$src" ] || continue
+    dst="$HOME/.$(basename "${src%.symlink}")"
+    link_file "$src" "$dst"
+  done
+
+  # Process *.symlink files in subdirectories (maxdepth 2)
+  for src in "$DOTFILES_ROOT"/*/*.symlink
+  do
+    [ -f "$src" ] || continue
+
+    local parent_dir=$(basename "$(dirname "$src")")
+
+    # Skip dot directories (handled separately below)
+    [[ "$parent_dir" == .* ]] && continue
+
+    # Special case: ssh directory - link files into ~/.ssh/
+    if [[ "$parent_dir" == "ssh" ]]; then
+      mkdir -p "$HOME/.ssh"
+      dst="$HOME/.ssh/$(basename "${src%.symlink}")"
     else
-      # Default behaviour: map to top-level dotfile, e.g. node/yarnrc.symlink -> ~/.yarnrc
-      dst="$HOME/.$(basename "${src%.*}")"
+      # Normal case: link to home directory
+      dst="$HOME/.$(basename "${src%.symlink}")"
     fi
 
     link_file "$src" "$dst"
   done
 }
 
-install_config_dirs () {
-  info 'installing XDG config directories'
+install_dot_dirs () {
+  info 'installing dot directories'
 
   local overwrite_all=false backup_all=false skip_all=false
 
-  # Create ~/.config if it doesn't exist
-  mkdir -p "$HOME/.config"
+  # Process all dot directories in DOTFILES_ROOT
+  for src_dir in "$DOTFILES_ROOT"/.*/
+  do
+    # Skip if not a directory
+    [ -d "$src_dir" ] || continue
 
-  # Link each directory in .config/ to ~/.config/
-  if [ -d "$DOTFILES_ROOT/.config" ]; then
-    for src_dir in "$DOTFILES_ROOT/.config"/*/
+    # Remove trailing slash
+    src_dir="${src_dir%/}"
+
+    local dir_name=$(basename "$src_dir")
+
+    # Skip special directories
+    [[ "$dir_name" == ".git" ]] && continue
+    [[ "$dir_name" == "." ]] && continue
+    [[ "$dir_name" == ".." ]] && continue
+
+    local dst_dir="$HOME/$dir_name"
+
+    # Always create target directory and link contents individually
+    info "linking contents of $dir_name"
+    mkdir -p "$dst_dir"
+
+    for src in "$src_dir"/*
     do
-      # Skip if not a directory (shouldn't happen with */ but safe)
-      [ -d "$src_dir" ] || continue
-      
-      # Remove trailing slash for consistency
-      src_dir="${src_dir%/}"
+      [ -e "$src" ] || continue
 
-      local config_name=$(basename "$src_dir")
-      local dst="$HOME/.config/$config_name"
-      
-      link_file "$src_dir" "$dst"
+      local item_name=$(basename "$src")
+      local dst="$dst_dir/$item_name"
+
+      link_file "$src" "$dst"
     done
-  fi
+  done
 }
 
 # Run if executed directly (not sourced)
 if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
   install_dotfiles
-  install_config_dirs
+  install_dot_dirs
 fi
