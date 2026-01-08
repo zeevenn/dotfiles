@@ -6,7 +6,8 @@
 vim.opt.conceallevel = 0
 vim.opt.autoread = true
 
-vim.o.scrolloff = 8
+-- This will cause buffer flickering in search
+-- vim.o.scrolloff = 8
 
 -- Enable project-local configuration files
 vim.o.exrc = true
