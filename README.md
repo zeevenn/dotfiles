@@ -17,11 +17,13 @@ This setup improves upon the original with better handling of modern XDG-complia
 ### Dot Directory Linking (`.config/`, `.ssh/`)
 
 **Original Holman approach:**
+
 - Only supports `*.symlink` files in the root directory
 - No built-in support for XDG Base Directory specification
 - Config directories like `.config/` must be managed manually
 
 **This implementation:**
+
 - Automatically handles dot directories (starting with `.`)
 - **Always creates target directory as real directory, then symlinks contents individually**
 - Example: `.config/nvim/` → `~/.config/nvim/` (subdirectory symlink)
@@ -34,25 +36,26 @@ This setup improves upon the original with better handling of modern XDG-complia
 ### SSH Configuration
 
 **This implementation adds:**
-- Special handling for `ssh/*.symlink` files → linked to `~/.ssh/`
-- Example: `ssh/config.symlink` → `~/.ssh/config`
+
+- Special handling for `.ssh/` directory → linked to `~/.ssh/`
+- Example: `.ssh/config` → `~/.ssh/config`
 - Keeps SSH keys separate from version control while managing config files
 
 ### Directory Structure Example
 
-```
+```text
 ~/.dotfiles/
 ├── .config/
 │   ├── nvim/          → symlinked to ~/.config/nvim/
 │   ├── tmux/          → symlinked to ~/.config/tmux/
 │   └── ghostty/       → symlinked to ~/.config/ghostty/
-└── ssh/
-    └── config.symlink → symlinked to ~/.ssh/config
+└── .ssh/
+    └── config         → symlinked to ~/.ssh/config
 ```
 
 Result in `$HOME`:
 
-```
+```text
 ~/
 ├── .config/              (real directory, can contain other apps' configs)
 │   ├── nvim/             → ~/.dotfiles/.config/nvim/
@@ -61,7 +64,7 @@ Result in `$HOME`:
 │   ├── github-copilot/   (managed by other app, not in dotfiles)
 │   └── ...
 └── .ssh/                 (real directory, contains keys)
-    ├── config            → ~/.dotfiles/ssh/config.symlink
+    ├── config            → ~/.dotfiles/.ssh/config
     ├── id_ed25519        (private key, not in dotfiles)
     └── ...
 ```

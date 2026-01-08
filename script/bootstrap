@@ -110,39 +110,6 @@ setup_ssh_key () {
   fi
 }
 
-setup_ssh_config () {
-  local ssh_config_src="$DOTFILES_ROOT/ssh/config.symlink"
-  local ssh_config_dst="$HOME/.ssh/config"
-
-  if [ -f "$ssh_config_src" ]
-  then
-    # If dst is a symlink pointing to the correct source, skip quietly
-    if [ -L "$ssh_config_dst" ]; then
-      local currentSrc
-      currentSrc="$(readlink "$ssh_config_dst")"
-      if [ "$currentSrc" == "$ssh_config_src" ]; then
-        return
-      fi
-    fi
-
-    info 'setup SSH config'
-
-    mkdir -p "$HOME/.ssh"
-
-    # If dst is a symlink pointing to a different source, back it up
-    if [ -L "$ssh_config_dst" ]; then
-      mv "$ssh_config_dst" "${ssh_config_dst}.backup"
-      success "moved $ssh_config_dst to ${ssh_config_dst}.backup"
-    elif [ -e "$ssh_config_dst" ]; then
-      # If a regular file/dir exists, back it up
-      mv "$ssh_config_dst" "${ssh_config_dst}.backup"
-      success "moved $ssh_config_dst to ${ssh_config_dst}.backup"
-    fi
-
-    ln -s "$ssh_config_src" "$ssh_config_dst"
-    success "SSH config symlink created"
-  fi
-}
 
 setup_proxy () {
   if ! [ -f proxy/env.local ]
@@ -202,7 +169,6 @@ install_tpm () {
 
 setup_gitconfig
 setup_ssh_key
-setup_ssh_config
 setup_proxy
 install_zinit
 install_tpm

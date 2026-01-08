@@ -118,15 +118,8 @@ install_dotfiles () {
     # Skip dot directories (handled separately below)
     [[ "$parent_dir" == .* ]] && continue
 
-    # Special case: ssh directory - link files into ~/.ssh/
-    if [[ "$parent_dir" == "ssh" ]]; then
-      mkdir -p "$HOME/.ssh"
-      dst="$HOME/.ssh/$(basename "${src%.symlink}")"
-    else
-      # Normal case: link to home directory
-      dst="$HOME/.$(basename "${src%.symlink}")"
-    fi
-
+    # Link to home directory
+    dst="$HOME/.$(basename "${src%.symlink}")"
     link_file "$src" "$dst"
   done
 }
