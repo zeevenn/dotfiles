@@ -28,7 +28,6 @@ brew 'yt-dlp'             # YouTube downloader
 brew 'grc'                # Colorize command output
 
 # CLI MacOS Input Source Manager
-tap "laishulu/homebrew"
 brew 'macism'
 
 # GUI applications

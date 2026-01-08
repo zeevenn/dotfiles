@@ -6,6 +6,10 @@ set -e
 
 cd "$(dirname $0)"/..
 
+# Tap third-party repositories first (brew bundle has issues with tap order)
+echo "› brew tap third-party repositories"
+brew tap laishulu/homebrew
+
 echo "› brew bundle"
 brew bundle
 
