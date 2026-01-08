@@ -1,12 +1,7 @@
-# Uses git's autocompletion for inner commands. Assumes an install of git's
-# bash `git-completion` script at $completion below (this is where Homebrew
-# tosses it, at least).
-completion='$(brew --prefix)/share/zsh/site-functions/_git'
-
-if test -f $completion
-then
-  source $completion
-fi
+# Use zsh's built-in git completion
+# Ensure completion system is loaded
+autoload -Uz compinit
+compinit -i
 
 # Make git aliases use git completion
 # gsw -> git switch, gb -> git branch, etc.
