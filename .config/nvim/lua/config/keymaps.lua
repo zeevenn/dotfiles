@@ -7,6 +7,10 @@ local keymap = vim.keymap
 keymap.set("n", "+", "<C-a>", { desc = "Increment number" })
 keymap.set("n", "-", "<C-x>", { desc = "Decrement number" })
 
+-- Fix space key occasionally acting as regular key
+-- https://www.reddit.com/r/neovim/comments/1mcvzmi/lazyvim_space_key_occasionally_acts_as_regular/
+keymap.set("n", " ", "<Nop>", { silent = true })
+
 -- VScode style
 keymap.set({ "n", "t" }, "<C-`>", function()
   Snacks.terminal()
