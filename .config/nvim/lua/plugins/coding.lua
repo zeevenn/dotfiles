@@ -23,17 +23,15 @@ return {
           end
 
           local filepath = vim.fn.expand("%:.")
+          local header = string.format("%s:%d\n", filepath, line)
           local messages = {}
 
-          for _, diag in ipairs(diagnostics) do
+          for i, diag in ipairs(diagnostics) do
             local severity = vim.diagnostic.severity[diag.severity]
-            table.insert(
-              messages,
-              string.format("%s:%d:%d [%s] %s", filepath, line, diag.col + 1, severity, diag.message)
-            )
+            table.insert(messages, string.format("%d. [%s] %s", i, severity, diag.message))
           end
 
-          local text = table.concat(messages, "\n")
+          local text = header .. table.concat(messages, "\n")
           vim.fn.setreg("+", text)
           vim.notify(string.format("Copied %d diagnostic(s) from line %d", #diagnostics, line), vim.log.levels.INFO)
         end,
@@ -51,17 +49,18 @@ return {
           end
 
           local filepath = vim.fn.expand("%:.")
+          local header = string.format("%s\n", filepath)
           local messages = {}
 
-          for _, diag in ipairs(diagnostics) do
+          for i, diag in ipairs(diagnostics) do
             local severity = vim.diagnostic.severity[diag.severity]
             local line = diag.lnum + 1
             local col = diag.col + 1
 
-            table.insert(messages, string.format("%s:%d:%d [%s] %s", filepath, line, col, severity, diag.message))
+            table.insert(messages, string.format("%d. Line %d:%d [%s] %s", i, line, col, severity, diag.message))
           end
 
-          local text = table.concat(messages, "\n")
+          local text = header .. table.concat(messages, "\n")
           vim.fn.setreg("+", text)
           vim.notify(string.format("Copied %d diagnostic(s) to clipboard", #diagnostics), vim.log.levels.INFO)
         end,
