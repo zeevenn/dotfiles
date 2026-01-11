@@ -27,8 +27,9 @@ brew 'wget'               # Network downloader
 brew 'yt-dlp'             # YouTube downloader
 brew 'grc'                # Colorize command output
 
-# CLI MacOS Input Source Manager
+# MacOS Input Source Manager
 brew 'macism'
+cask 'input-source-pro'
 
 # GUI applications
 cask 'ghostty'            # Terminal emulator
