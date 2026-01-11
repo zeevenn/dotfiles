@@ -1,5 +1,5 @@
 # npm configuration
-# Public settings only - sensitive data goes in ~/.localrc
+# Public settings only - sensitive data goes in ~/.localrc or ~/.dotfiles/node/env.local
 
 # Global package path
 prefix=~/.npm-global

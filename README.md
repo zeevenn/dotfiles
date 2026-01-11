@@ -128,12 +128,14 @@ zinit update
 
 ### Private Configuration
 
-Sensitive data goes in `~/.localrc` (automatically sourced firstly, not tracked):
+Sensitive data goes in `~/.localrc`  or `~/.dotfiles/xxx/env.local` (automatically sourced firstly, not tracked):
 
 ```bash
 # ~/.localrc
-export GITHUB_TOKEN="your_token"
-export NPM_TOKEN="your_token"
+export SECRET = ***
+
+# Or ~/.dotfiles/xxx/env.local
+export SECRET = ***
 ```
 
 ### Add New Topics
