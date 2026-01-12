@@ -18,7 +18,7 @@ return {
           args = {
             "--config",
             vim.fn.stdpath("config") .. "/config/.markdownlint.json",
-            "--",
+            "-",
           },
         },
       },
