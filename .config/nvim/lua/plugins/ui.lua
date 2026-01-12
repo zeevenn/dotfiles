@@ -70,13 +70,11 @@ return {
       indent = {
         scope = { enabled = false },
       },
-    },
-  },
-
-  -- logo
-  {
-    "snacks.nvim",
-    opts = {
+      -- Disable scroll animations for better performance:w
+      scroll = {
+        enabled = false,
+      },
+      -- logo
       dashboard = {
         preset = {
           header = [[
