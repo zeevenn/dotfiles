@@ -70,7 +70,7 @@ return {
       indent = {
         scope = { enabled = false },
       },
-      -- Disable scroll animations for better performance:w
+      -- Disable scroll animations for better performance in low-end devices
       scroll = {
         enabled = false,
       },
