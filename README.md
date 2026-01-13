@@ -128,7 +128,7 @@ zinit update
 
 ### Private Configuration
 
-Sensitive data goes in `~/.localrc`  or `~/.dotfiles/xxx/env.local` (automatically sourced firstly, not tracked):
+Sensitive data goes in `~/.localrc` or `~/.dotfiles/xxx/env.local` (automatically sourced firstly, not tracked):
 
 ```bash
 # ~/.localrc
