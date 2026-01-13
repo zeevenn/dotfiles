@@ -10,9 +10,9 @@ then
 fi
 
 # Source local configuration if it exists
-for file in ${(M)config_files:#*/env.local}
+for file in $ZSH/**/env.local
 do
-  source $file
+  [[ -f $file ]] && source $file
 done
 
 # Load Zinit
