@@ -1,5 +1,14 @@
 return {
   {
+    "mason.org/mason.nvim",
+    opts = {
+      ensure_installed = {
+        "css-lsp",
+      },
+    },
+  },
+
+  {
     "folke/which-key.nvim",
     optional = true,
     opts = {
@@ -8,6 +17,7 @@ return {
       },
     },
   },
+
   {
     "neovim/nvim-lspconfig",
     keys = {
