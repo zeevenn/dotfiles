@@ -1,0 +1,1 @@
+alias flutter='fvm flutter'

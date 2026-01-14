@@ -9,6 +9,7 @@ cd "$(dirname $0)"/..
 # Tap third-party repositories first (brew bundle has issues with tap order)
 echo "› brew tap third-party repositories"
 brew tap laishulu/homebrew
+brew tap leoafarias/fvm
 
 echo "› brew bundle"
 brew bundle
@@ -17,4 +18,4 @@ brew bundle
 find . -name install.sh -exec chmod +x {} \;
 
 # find the installers and run them iteratively
-find . -name install.sh | while read installer ; do sh -c "${installer}" ; done
+find . -name install.sh | while read installer; do sh -c "${installer}"; done

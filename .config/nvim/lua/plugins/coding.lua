@@ -1,6 +1,6 @@
 return {
   {
-    "mason.org/mason.nvim",
+    "mason-org/mason.nvim",
     opts = {
       ensure_installed = {
         "css-lsp",
@@ -107,5 +107,23 @@ return {
         desc = "Copy absolute path",
       },
     },
+  },
+
+  {
+    "akinsho/flutter-tools.nvim",
+    lazy = false,
+    dependencies = {
+      "nvim-lua/plenary.nvim",
+      "stevearc/dressing.nvim", -- Optional for enhanced UI popups
+    },
+    opts = {
+      fvm = true,
+      debugger = {
+        statusline = {
+          app_version = true,
+          device = true,
+        }
+      }
+    }
   },
 }
