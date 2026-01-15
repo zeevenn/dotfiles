@@ -12,3 +12,6 @@ vim.opt.autoread = true
 -- Enable project-local configuration files
 vim.o.exrc = true
 vim.opt.secure = true
+
+-- Only use .git for root detection (default includes "lua" which causes nvim config to be detected as root)
+vim.g.root_spec = { "lsp", ".git", "cwd" }
