@@ -66,6 +66,13 @@ return {
   -- Show git diff side by side
   {
     "sindrets/diffview.nvim",
+    opts = {
+      view = {
+        merge_tool = {
+          layout = "diff3_mixed",
+        },
+      },
+    },
     cmd = { "DiffviewOpen", "DiffviewClose", "DiffviewToggleFiles", "DiffviewFileHistory" },
     keys = {
       { "<leader>gd", "<cmd>DiffviewOpen<cr>", desc = "Open Diffview" },
