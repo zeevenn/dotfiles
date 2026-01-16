@@ -16,6 +16,9 @@ keymap.set({ "n", "t" }, "<C-`>", function()
   Snacks.terminal()
 end, { desc = "Switch to terminal" })
 
+-- Cmd+S to save, for ghostty, enable macos-option-as-alt
+keymap.set({ "n", "i", "v" }, "<A-s>", "<cmd>w<cr><esc>", { desc = "Save file" })
+
 -- git open
 keymap.set("n", "<leader>go", function()
   vim.cmd("!git open")
