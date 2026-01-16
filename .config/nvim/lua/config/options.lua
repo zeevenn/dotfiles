@@ -15,3 +15,6 @@ vim.opt.secure = true
 
 -- Only use .git for root detection (default includes "lua" which causes nvim config to be detected as root)
 vim.g.root_spec = { "lsp", ".git", "cwd" }
+
+-- Prettier: require config for most filetypes, but always enable for markdown
+vim.g.lazyvim_prettier_needs_config = true
