@@ -1,0 +1,27 @@
+# Yazi keymap configuration
+# https://yazi-rs.github.io/docs/configuration/keymap
+
+[[manager.prepend_keymap]]
+on = "<C-n>"
+run = "shell 'nvim .' --block --confirm"
+desc = "Open nvim in current directory"
+
+[[manager.prepend_keymap]]
+on = "y"
+run = "yank"
+desc = "Yank selected files (copy)"
+
+[[manager.prepend_keymap]]
+on = "Y"
+run = "unyank"
+desc = "Cancel yank"
+
+[[manager.prepend_keymap]]
+on = "<A-j>"
+run = "seek 5"
+desc = "Seek down 5 in preview"
+
+[[manager.prepend_keymap]]
+on = "<A-k>"
+run = "seek -5"
+desc = "Seek up 5 in preview"

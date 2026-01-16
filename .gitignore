@@ -32,3 +32,6 @@ Thumbs.db
 
 # tmux
 .config/tmux/plugins
+
+# yazi
+.config/yazi/flavors

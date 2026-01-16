@@ -7,11 +7,12 @@ brew 'zoxide'             # Smarter cd command
 brew 'fzf'                # Fuzzy finder
 brew 'eza'                # Modern ls replacement
 brew 'bat'                # Better cat with syntax highlighting
-brew 'ripgrep'            # Fast grep (nvim dependency)
-brew 'fd'                 # Fast find (nvim dependency)
+brew 'ripgrep'            # Fast grep
+brew 'fd'                 # Fast find
 brew 'lazygit'            # Git TUI (nvim integration)
 brew 'nvim'               # Neovim
 brew 'tmux'               # Terminal multiplexer
+brew 'yazi'               # File manager
 
 # Development tools
 brew 'fnm'                # Fast Node Manager
@@ -24,7 +25,12 @@ brew 'fvm'               # Flutter version manager
 
 # System tools
 brew 'imagemagick'        # Image processing
+brew 'ffmpeg'             # Video processing
+brew 'sevenzip'           # Archive manager
 brew 'wget'               # Network downloader
+brew 'jq'                 # JSON processor
+brew 'poppler'            # PDF processing
+brew 'resvg'              # SVG processing
 brew 'yt-dlp'             # YouTube downloader
 brew 'grc'                # Colorize command output
 
