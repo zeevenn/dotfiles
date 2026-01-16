@@ -21,7 +21,7 @@ brew 'uv'                 # Python package and project manager
 brew 'rbenv'              # Ruby version manager
 cask 'zulu@17'            # Java 17 for Android development
 brew 'awscli'
-brew 'fvm'               # Flutter version manager
+brew 'fvm'                # Flutter version manager
 
 # System tools
 brew 'imagemagick'        # Image processing
