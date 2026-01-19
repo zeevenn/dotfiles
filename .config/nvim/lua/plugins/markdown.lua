@@ -7,6 +7,16 @@ return {
     },
   },
 
+  -- Upload images to PicGo image bed
+  {
+    "askfiy/nvim-picgo",
+    event = "VeryLazy",
+    keys = {
+      { "<leader>ip", "<cmd>UploadClipboard<cr>", desc = "Upload clipboard image (PicGo)" },
+      { "<leader>if", "<cmd>UploadImagefile<cr>", desc = "Upload image file (PicGo)" },
+    },
+  },
+
   {
     "mfussenegger/nvim-lint",
     opts = {
