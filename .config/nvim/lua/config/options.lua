@@ -18,3 +18,10 @@ vim.g.root_spec = { "lsp", ".git", "cwd" }
 
 -- Prettier: require config for most filetypes, but always enable for markdown
 vim.g.lazyvim_prettier_needs_config = true
+
+-- Treat .vscode/*.json files as jsonc (allows comments)
+vim.filetype.add({
+  pattern = {
+    [".*%.vscode/.*%.json"] = "jsonc",
+  },
+})
