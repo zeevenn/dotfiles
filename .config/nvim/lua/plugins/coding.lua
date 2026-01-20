@@ -110,7 +110,7 @@ return {
   },
 
   {
-    "akinsho/flutter-tools.nvim",
+    "nvim-flutter/flutter-tools.nvim",
     lazy = false,
     dependencies = {
       "nvim-lua/plenary.nvim",
@@ -122,8 +122,8 @@ return {
         statusline = {
           app_version = true,
           device = true,
-        }
-      }
-    }
+        },
+      },
+    },
   },
 }
