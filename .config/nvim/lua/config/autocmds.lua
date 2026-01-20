@@ -12,7 +12,8 @@ vim.api.nvim_del_augroup_by_name("lazyvim_wrap_spell")
 -- wrap in text filetypes
 vim.api.nvim_create_autocmd("FileType", {
   group = vim.api.nvim_create_augroup("wrap_text", { clear = true }),
-  pattern = { "text", "plaintex", "typst", "gitcommit", "markdown" },
+  -- In markdown will wrap table, it's very annoying for reading
+  pattern = { "text", "plaintex", "typst", "gitcommit" },
   callback = function()
     vim.opt_local.wrap = true
   end,
