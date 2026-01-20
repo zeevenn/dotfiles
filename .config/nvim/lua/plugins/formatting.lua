@@ -3,9 +3,7 @@ return {
     "neovim/nvim-lspconfig",
     opts = {
       setup = {
-        -- Register this to give eslint formatter lower priority and still format with vtsls as well.
-        -- It can fix conflict between eslint and vtsls when using both.
-        -- Eslint will override vtsls formatter.
+        -- Let eslint take over all formatting for JS/TS files (like VSCode)
         eslint = function()
           if not (vim.g.lazyvim_eslint_auto_format == nil or vim.g.lazyvim_eslint_auto_format) then
             return
@@ -13,8 +11,8 @@ return {
 
           local formatter = LazyVim.lsp.formatter({
             name = "eslint: lsp",
-            primary = false,
-            priority = 0,
+            primary = true,
+            priority = 200,
             filter = "eslint",
           })
 
