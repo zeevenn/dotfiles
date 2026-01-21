@@ -1,3 +1,12 @@
+-- Transform to show relative path in preview title
+local function lsp_preview_title(item)
+  if item.file then
+    -- Show path relative to cwd, keeping last 3 directories
+    item.preview_title = vim.fn.fnamemodify(item.file, ":~:.")
+  end
+  return item
+end
+
 return {
   {
     "folke/snacks.nvim",
@@ -35,6 +44,12 @@ return {
               end
             end,
           },
+
+          -- Show relative path in preview title for LSP sources
+          lsp_references = { transform = lsp_preview_title },
+          lsp_definitions = { transform = lsp_preview_title },
+          lsp_implementations = { transform = lsp_preview_title },
+          lsp_type_definitions = { transform = lsp_preview_title },
         },
       },
     },
