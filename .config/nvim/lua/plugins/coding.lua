@@ -38,7 +38,12 @@ return {
 
           for i, diag in ipairs(diagnostics) do
             local severity = vim.diagnostic.severity[diag.severity]
-            table.insert(messages, string.format("%d. [%s] %s", i, severity, diag.message))
+            local source = diag.source or "unknown"
+            local msg = diag.message
+            if diag.code then
+              msg = string.format("%s [%s]", msg, diag.code)
+            end
+            table.insert(messages, string.format("%d. [%s] (%s) %s", i, severity, source, msg))
           end
 
           local text = header .. table.concat(messages, "\n")
@@ -66,8 +71,13 @@ return {
             local severity = vim.diagnostic.severity[diag.severity]
             local line = diag.lnum + 1
             local col = diag.col + 1
+            local source = diag.source or "unknown"
+            local msg = diag.message
+            if diag.code then
+              msg = string.format("%s [%s]", msg, diag.code)
+            end
 
-            table.insert(messages, string.format("%d. Line %d:%d [%s] %s", i, line, col, severity, diag.message))
+            table.insert(messages, string.format("%d. Line %d:%d [%s] (%s) %s", i, line, col, severity, source, msg))
           end
 
           local text = header .. table.concat(messages, "\n")

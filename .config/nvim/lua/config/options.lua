@@ -25,3 +25,10 @@ vim.filetype.add({
     [".*%.vscode/.*%.json"] = "jsonc",
   },
 })
+
+-- Show diagnostic source in float window (e.g., "eslint:", "typescript:")
+vim.diagnostic.config({
+  float = {
+    source = true,
+  },
+})
