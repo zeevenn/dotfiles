@@ -53,13 +53,6 @@ $ZSH/macos/set-hostname.sh
 # Install homebrew
 $ZSH/homebrew/install.sh 2>&1
 
-# Upgrade homebrew
-echo "› brew update"
-brew update
-
-echo "› brew upgrade"
-brew upgrade
-
 # Create/update symlinks
 echo "› script/link"
 $ZSH/script/link
