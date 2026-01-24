@@ -47,6 +47,7 @@ cask 'snipaste'           # Screenshot tool
 cask 'pearcleaner'        # System cleaner
 cask 'loop'               # Window management tool
 cask 'mac-mouse-fix'      # Make Your $10 Mouse Better Than an Apple Trackpad
+cask 'beekeeper-studio'   # Database management tool
 
 # Font for terminal
 cask 'font-jetbrains-mono-nerd-font'
