@@ -72,7 +72,7 @@ return {
       },
       -- Disable scroll animations for better performance in low-end devices
       scroll = {
-        enabled = false,
+        -- enabled = false,
       },
       -- logo
       dashboard = {
