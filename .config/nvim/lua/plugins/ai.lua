@@ -17,6 +17,11 @@ return {
           },
         },
       },
+      copilot = {
+        status = {
+          level = vim.log.levels.OFF,
+        },
+      },
     },
   },
 }
