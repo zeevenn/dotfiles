@@ -1,9 +1,5 @@
 return {
   {
-    "github/copilot.vim",
-  },
-
-  {
     "folke/sidekick.nvim",
     opts = {
       cli = {
