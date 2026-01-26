@@ -18,3 +18,14 @@ vim.api.nvim_create_autocmd("FileType", {
     vim.opt_local.wrap = true
   end,
 })
+
+-- Set Java tabwidth to 4
+vim.api.nvim_create_autocmd("FileType", {
+  group = vim.api.nvim_create_augroup("java_indent", { clear = true }),
+  pattern = { "java" },
+  callback = function()
+    vim.opt_local.tabstop = 4
+    vim.opt_local.shiftwidth = 4
+    vim.opt_local.softtabstop = 4
+  end,
+})
