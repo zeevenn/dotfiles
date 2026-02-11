@@ -17,7 +17,7 @@ return {
           files = {
             hidden = true,
             ignored = true,
-            exclude = { "**/.git", "**/.DS_Store", "**/node_modules" },
+            exclude = { "**/.git", "**/.DS_Store", "**/node_modules", "**/dist" },
           },
           explorer = {
             hidden = true,
