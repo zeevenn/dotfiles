@@ -27,9 +27,11 @@ return {
               "**/.DS_Store",
               "**/.conform.*",
             },
+            jump = { close = true },
           },
 
           -- Automatically open explorer in project directory
+          -- In nvim start dashboard, open with projects pikcer
           projects = {
             confirm = function(picker, item)
               picker:close()
