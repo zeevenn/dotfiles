@@ -59,18 +59,10 @@ return {
       vim.api.nvim_create_autocmd("FocusGained", {
         group = vim.api.nvim_create_augroup("snacks_explorer_git_refresh", { clear = true }),
         callback = function()
-          local ok, Git = pcall(require, "snacks.explorer.git")
-          if not ok then
-            return
-          end
-          -- Force refresh git status (clear cache)
-          for root in pairs(Git.state) do
-            Git.state[root].last = 0
-          end
-          -- Update all open explorers
+          -- Update all open explorers (will auto-refresh git status)
           local explorers = Snacks.picker.get({ source = "explorer" })
           for _, explorer in ipairs(explorers) do
-            require("snacks.explorer.actions").update(explorer, { refresh = true })
+            explorer:action("explorer_update")
           end
         end,
       })
