@@ -39,11 +39,6 @@ return {
           picker:close()
           if item then
             vim.fn.chdir(item.file)
-            -- Restore session and open explorer
-            local ok, persistence = pcall(require, "persistence")
-            if ok then
-              persistence.load()
-            end
             Snacks.explorer()
           end
         end,
