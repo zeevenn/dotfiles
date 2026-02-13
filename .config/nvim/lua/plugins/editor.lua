@@ -10,51 +10,73 @@ end
 return {
   {
     "folke/snacks.nvim",
-    opts = {
-      picker = {
-        sources = {
-          -- Always show hidden files, exclude .git, .DS_Store and node_modules
-          files = {
-            hidden = true,
-            ignored = true,
-            exclude = { "**/.git", "**/.DS_Store", "**/node_modules", "**/dist" },
-          },
-          explorer = {
-            hidden = true,
-            ignored = true,
-            exclude = {
-              "**/.git",
-              "**/.DS_Store",
-              "**/.conform.*",
-            },
-            jump = { close = true },
-          },
+    opts = function(_, opts)
+      opts.picker = opts.picker or {}
+      opts.picker.sources = opts.picker.sources or {}
 
-          -- Automatically open explorer in project directory
-          -- In nvim start dashboard, open with projects pikcer
-          projects = {
-            confirm = function(picker, item)
-              picker:close()
-              if item then
-                vim.fn.chdir(item.file)
-                -- Restore session and open explorer
-                local ok, persistence = pcall(require, "persistence")
-                if ok then
-                  persistence.load()
-                end
-                Snacks.explorer()
-              end
-            end,
-          },
+      -- Always show hidden files, exclude .git, .DS_Store and node_modules
+      opts.picker.sources.files = {
+        hidden = true,
+        ignored = true,
+        exclude = { "**/.git", "**/.DS_Store", "**/node_modules", "**/dist" },
+      }
 
-          -- Show relative path in preview title for LSP sources
-          lsp_references = { transform = lsp_preview_title },
-          lsp_definitions = { transform = lsp_preview_title },
-          lsp_implementations = { transform = lsp_preview_title },
-          lsp_type_definitions = { transform = lsp_preview_title },
+      opts.picker.sources.explorer = {
+        hidden = true,
+        ignored = true,
+        exclude = {
+          "**/.git",
+          "**/.DS_Store",
+          "**/.conform.*",
         },
-      },
-    },
+        jump = { close = true },
+      }
+
+      -- Automatically open explorer in project directory
+      -- In nvim start dashboard, open with projects pikcer
+      opts.picker.sources.projects = {
+        confirm = function(picker, item)
+          picker:close()
+          if item then
+            vim.fn.chdir(item.file)
+            -- Restore session and open explorer
+            local ok, persistence = pcall(require, "persistence")
+            if ok then
+              persistence.load()
+            end
+            Snacks.explorer()
+          end
+        end,
+      }
+
+      -- Show relative path in preview title for LSP sources
+      opts.picker.sources.lsp_references = { transform = lsp_preview_title }
+      opts.picker.sources.lsp_definitions = { transform = lsp_preview_title }
+      opts.picker.sources.lsp_implementations = { transform = lsp_preview_title }
+      opts.picker.sources.lsp_type_definitions = { transform = lsp_preview_title }
+
+      -- Refresh git status when focus returns to Neovim (e.g., after git commit)
+      vim.api.nvim_create_autocmd("FocusGained", {
+        group = vim.api.nvim_create_augroup("snacks_explorer_git_refresh", { clear = true }),
+        callback = function()
+          local ok, Git = pcall(require, "snacks.explorer.git")
+          if not ok then
+            return
+          end
+          -- Force refresh git status (clear cache)
+          for root in pairs(Git.state) do
+            Git.state[root].last = 0
+          end
+          -- Update all open explorers
+          local explorers = Snacks.picker.get({ source = "explorer" })
+          for _, explorer in ipairs(explorers) do
+            require("snacks.explorer.actions").update(explorer, { refresh = true })
+          end
+        end,
+      })
+
+      return opts
+    end,
     keys = {
       {
         "<leader><space>",
