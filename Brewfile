@@ -44,7 +44,6 @@ cask 'notion'             # Note-taking app
 cask 'wechat'             # Messaging app
 cask 'visual-studio-code' # Code editor
 cask 'snipaste'           # Screenshot tool
-cask 'pearcleaner'        # System cleaner
 cask 'loop'               # Window management tool
 cask 'mac-mouse-fix'      # Make Your $10 Mouse Better Than an Apple Trackpad
 cask 'beekeeper-studio'   # Database management tool
