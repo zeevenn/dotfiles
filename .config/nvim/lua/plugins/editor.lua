@@ -75,6 +75,21 @@ return {
       -- Disable snacks.picker git diff keymaps (conflicts with diffview)
       { "<leader>gd", false },
       { "<leader>gD", false },
+      -- Custom explorer keymaps: e = quick (auto-close), E = persistent (stay open)
+      {
+        "<leader>e",
+        function()
+          Snacks.picker.pick("explorer", { jump = { close = true } })
+        end,
+        desc = "Explorer (auto-close)",
+      },
+      {
+        "<leader>E",
+        function()
+          Snacks.picker.pick("explorer", { jump = { close = false } })
+        end,
+        desc = "Explorer (persistent)",
+      },
     },
   },
 
