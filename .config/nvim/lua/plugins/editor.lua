@@ -56,8 +56,8 @@ return {
         callback = function()
           -- Update all open explorers (will auto-refresh git status)
           local explorers = Snacks.picker.get({ source = "explorer" })
-          for _, explorer in ipairs(explorers) do
-            explorer:action("explorer_update")
+          for _, picker in ipairs(explorers) do
+            picker:action("explorer_update")
           end
         end,
       })
