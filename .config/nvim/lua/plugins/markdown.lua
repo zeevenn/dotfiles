@@ -47,10 +47,16 @@ return {
         },
         -- Forced to always run
         ["markdownlint-cli2"] = {
-          condition = function() return true end,
+          condition = function()
+            return true
+          end,
           args = { "--config", vim.fn.stdpath("config") .. "/config/.markdownlint.json", "-" },
         },
-        ["markdown-toc"] = { condition = function() return true end },
+        ["markdown-toc"] = {
+          condition = function()
+            return true
+          end,
+        },
       },
       formatters_by_ft = {
         -- Markdown: same as lazyvim markdown extra, but use prettier_markdown (always runs, no config check)
@@ -58,5 +64,24 @@ return {
         ["markdown.mdx"] = { "prettier_markdown", "markdownlint-cli2", "markdown-toc" },
       },
     },
+  },
+
+  { "iamcco/markdown-preview.nvim", enabled = false },
+  {
+    "selimacerbas/markdown-preview.nvim",
+    cmd = { "MarkdownPreview", "MarkdownPreviewRefresh", "MarkdownPreviewStop" },
+    keys = {
+      { "<leader>mp", "<cmd>MarkdownPreview<cr>", desc = "Markdown: Preview" },
+      { "<leader>mP", "<cmd>MarkdownPreviewStop<cr>", desc = "Markdown: Stop preview" },
+      { "<leader>mr", "<cmd>MarkdownPreviewRefresh<cr>", desc = "Markdown: Refresh preview" },
+    },
+    dependencies = { "selimacerbas/live-server.nvim" },
+    config = function()
+      require("markdown_preview").setup({
+        port = 8421,
+        open_browser = true,
+        debounce_ms = 300,
+      })
+    end,
   },
 }
