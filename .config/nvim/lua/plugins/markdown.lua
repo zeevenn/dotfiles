@@ -45,6 +45,12 @@ return {
           args = { "--stdin-filepath", "$FILENAME" },
           stdin = true,
         },
+        -- Forced to always run
+        ["markdownlint-cli2"] = {
+          condition = function() return true end,
+          args = { "--config", vim.fn.stdpath("config") .. "/config/.markdownlint.json", "-" },
+        },
+        ["markdown-toc"] = { condition = function() return true end },
       },
       formatters_by_ft = {
         -- Markdown: same as lazyvim markdown extra, but use prettier_markdown (always runs, no config check)

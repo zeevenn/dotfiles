@@ -16,8 +16,41 @@ return {
             filter = "eslint",
           })
 
-          -- register the formatter with LazyVim
+          -- Markdown: use dedicated formatter (conform + eslint)
+          local orig_sources = formatter.sources
+          formatter.sources = function(buf)
+            local ft = vim.bo[buf].ft
+            if ft == "markdown" or ft == "markdown.mdx" then
+              return {}
+            end
+            return orig_sources(buf)
+          end
+
           LazyVim.format.register(formatter)
+
+          -- Markdown: conform first, eslint fallback when attached
+          LazyVim.format.register({
+            name = "markdown: conform + eslint",
+            primary = true,
+            priority = 250,
+            format = function(buf)
+              require("conform").format({
+                bufnr = buf,
+                formatters = { "prettier_markdown", "markdownlint-cli2", "markdown-toc" },
+              })
+              if #vim.lsp.get_clients({ bufnr = buf, name = "eslint" }) > 0 then
+                vim.lsp.buf.format({ bufnr = buf, filter = function(c) return c.name == "eslint" end })
+              end
+            end,
+            sources = function(buf)
+              local ft = vim.bo[buf].ft
+              if ft ~= "markdown" and ft ~= "markdown.mdx" then
+                return {}
+              end
+              local has_eslint = #vim.lsp.get_clients({ bufnr = buf, name = "eslint" }) > 0
+              return has_eslint and { "conform", "eslint" } or { "conform" }
+            end,
+          })
         end,
       },
     },
