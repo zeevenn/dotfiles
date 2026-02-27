@@ -69,11 +69,22 @@ return {
   { "iamcco/markdown-preview.nvim", enabled = false },
   {
     "selimacerbas/markdown-preview.nvim",
+    name = "selim-markdown-preview",
     cmd = { "MarkdownPreview", "MarkdownPreviewRefresh", "MarkdownPreviewStop" },
     keys = {
-      { "<leader>mp", "<cmd>MarkdownPreview<cr>", desc = "Markdown: Preview" },
-      { "<leader>mP", "<cmd>MarkdownPreviewStop<cr>", desc = "Markdown: Stop preview" },
-      { "<leader>mr", "<cmd>MarkdownPreviewRefresh<cr>", desc = "Markdown: Refresh preview" },
+      {
+        "<leader>cp",
+        function()
+          local mp = require("markdown_preview")
+          if mp._server_instance then
+            mp.stop()
+          else
+            mp.start()
+          end
+        end,
+        ft = "markdown",
+        desc = "Markdown Preview Toggle",
+      },
     },
     dependencies = { "selimacerbas/live-server.nvim" },
     config = function()
