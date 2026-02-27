@@ -57,6 +57,13 @@ return {
             kind = "shell_out",
           },
         },
+        {
+          opts = { skip = true },
+          filter = {
+            event = "notify",
+            find = "unavailable: Condition failed",
+          },
+        },
       },
     },
   },
