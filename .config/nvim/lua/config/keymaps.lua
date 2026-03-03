@@ -20,3 +20,19 @@ end, { desc = "Switch to terminal" })
 keymap.set("n", "<leader>go", function()
   vim.cmd("!git open")
 end, { desc = "Git Open (repo)" })
+
+-- Auto enter insert mode in terminal buffers (for sidekick, etc)
+vim.api.nvim_create_autocmd("TermOpen", {
+  group = vim.api.nvim_create_augroup("terminal_auto_insert", { clear = true }),
+  callback = function()
+    vim.cmd("startinsert")
+  end,
+})
+
+vim.api.nvim_create_autocmd("BufEnter", {
+  group = vim.api.nvim_create_augroup("terminal_reenter_insert", { clear = true }),
+  pattern = "term://*",
+  callback = function()
+    vim.cmd("startinsert")
+  end,
+})
