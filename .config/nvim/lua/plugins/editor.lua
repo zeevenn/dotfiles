@@ -128,7 +128,22 @@ return {
   -- Auto switch input method
   {
     "keaising/im-select.nvim",
-    opts = {},
+    opts = {
+      default_im_select = "com.apple.keylayout.ABC",
+      default_command = "macism",
+    },
+    config = function(_, opts)
+      require("im_select").setup(opts)
+
+      -- Switch to English on window/buffer switch
+      local im_group = vim.api.nvim_create_augroup("im_select_extra", { clear = true })
+      vim.api.nvim_create_autocmd({ "WinEnter", "BufEnter", "FocusGained" }, {
+        group = im_group,
+        callback = function()
+          vim.fn.system("macism com.apple.keylayout.ABC")
+        end,
+      })
+    end,
   },
 
   -- Keep scrolloff at the end of file
