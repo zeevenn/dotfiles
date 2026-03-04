@@ -29,3 +29,12 @@ vim.api.nvim_create_autocmd("FileType", {
     vim.opt_local.softtabstop = 4
   end,
 })
+
+-- .env use dotenv filetype otherwise it will be detected as sh and the syntax is not good for env files
+vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
+  group = vim.api.nvim_create_augroup("dotenv_filetype", { clear = true }),
+  pattern = ".env*",
+  callback = function()
+    vim.bo.filetype = "dotenv"
+  end,
+})
