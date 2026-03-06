@@ -1,6 +1,6 @@
 # Dotfiles
 
-Personal dotfiles for macOS.
+Personal dotfiles for macOS. See @README.md for features and usage.
 
 ## Structure
 
