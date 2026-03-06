@@ -17,8 +17,7 @@ if command -v eza &> /dev/null; then
   alias lt='eza --tree'
 fi
 
-# cd replacement with zoxide
+# cd replacement with zoxide (init is in zshrc.symlink at the end)
 if command -v zoxide &> /dev/null; then
-  eval "$(zoxide init zsh)"
   alias cd='z'
 fi
