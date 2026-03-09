@@ -10,6 +10,23 @@ end
 return {
   {
     "folke/snacks.nvim",
+    init = function()
+      -- Setup autocmd ONCE during plugin initialization (not in opts function)
+      -- Refresh git status when focus returns to Neovim (e.g., after git commit)
+      vim.api.nvim_create_autocmd("FocusGained", {
+        group = vim.api.nvim_create_augroup("snacks_explorer_git_refresh", { clear = true }),
+        callback = function()
+          -- Update all open explorers (will auto-refresh git status)
+          local ok, snacks = pcall(require, "snacks")
+          if ok and snacks.picker then
+            local explorers = snacks.picker.get({ source = "explorer" })
+            for _, picker in ipairs(explorers) do
+              picker:action("explorer_update")
+            end
+          end
+        end,
+      })
+    end,
     opts = function(_, opts)
       opts.picker = opts.picker or {}
       opts.picker.sources = opts.picker.sources or {}
@@ -49,18 +66,6 @@ return {
       opts.picker.sources.lsp_definitions = { transform = lsp_preview_title }
       opts.picker.sources.lsp_implementations = { transform = lsp_preview_title }
       opts.picker.sources.lsp_type_definitions = { transform = lsp_preview_title }
-
-      -- Refresh git status when focus returns to Neovim (e.g., after git commit)
-      vim.api.nvim_create_autocmd("FocusGained", {
-        group = vim.api.nvim_create_augroup("snacks_explorer_git_refresh", { clear = true }),
-        callback = function()
-          -- Update all open explorers (will auto-refresh git status)
-          local explorers = Snacks.picker.get({ source = "explorer" })
-          for _, picker in ipairs(explorers) do
-            picker:action("explorer_update")
-          end
-        end,
-      })
 
       return opts
     end,
@@ -128,6 +133,7 @@ return {
   -- Auto switch input method
   {
     "keaising/im-select.nvim",
+    event = "VeryLazy",
     opts = {
       default_im_select = "com.apple.keylayout.ABC",
       default_command = "macism",
@@ -136,11 +142,16 @@ return {
       require("im_select").setup(opts)
 
       -- Switch to English on window/buffer switch
+      -- Use Job API instead of system() to avoid blocking and memory buildup
       local im_group = vim.api.nvim_create_augroup("im_select_extra", { clear = true })
       vim.api.nvim_create_autocmd({ "WinEnter", "BufEnter", "FocusGained" }, {
         group = im_group,
         callback = function()
-          vim.fn.system("macism com.apple.keylayout.ABC")
+          -- Use jobstart to avoid blocking and memory accumulation
+          vim.fn.jobstart({ "macism", "com.apple.keylayout.ABC" }, {
+            detach = true,
+            on_exit = function() end,
+          })
         end,
       })
     end,

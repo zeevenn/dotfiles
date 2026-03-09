@@ -80,6 +80,31 @@ return {
         open_browser = true,
         debounce_ms = 300,
       })
+
+      -- Auto-stop preview when leaving markdown buffers for too long
+      local preview_timer = nil
+      vim.api.nvim_create_autocmd("FileType", {
+        group = vim.api.nvim_create_augroup("markdown_preview_cleanup", { clear = true }),
+        pattern = "*",
+        callback = function(ev)
+          local mp = require("markdown_preview")
+          if ev.match ~= "markdown" and mp._server_instance then
+            -- Stop preview after 5 minutes of not viewing markdown
+            if preview_timer then
+              vim.fn.timer_stop(preview_timer)
+            end
+            preview_timer = vim.fn.timer_start(300000, function()
+              if mp._server_instance then
+                mp.stop()
+                vim.notify("Markdown preview auto-stopped (inactive)", vim.log.levels.INFO)
+              end
+            end)
+          elseif ev.match == "markdown" and preview_timer then
+            vim.fn.timer_stop(preview_timer)
+            preview_timer = nil
+          end
+        end,
+      })
     end,
   },
 }

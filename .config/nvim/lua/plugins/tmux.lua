@@ -11,37 +11,62 @@ vim.api.nvim_set_hl(0, "TmuxWindowInactive", { fg = "#6c7086" })
 local cache = {
   session = "",
   windows = {},
+  updating = false,
+  last_update = 0,
 }
 
+-- Throttle updates to max once per second to prevent memory buildup
+local UPDATE_INTERVAL = 1000 -- milliseconds
+
+local function should_update()
+  local now = vim.loop.now()
+  if cache.updating or (now - cache.last_update) < UPDATE_INTERVAL then
+    return false
+  end
+  cache.last_update = now
+  cache.updating = true
+  return true
+end
+
 local function get_session()
-  vim.system(
-    { "tmux", "display-message", "-p", "#S" },
-    { text = true },
-    function(out)
-      cache.session = out.stdout:gsub("[\n\r]", "")
-    end
-  )
-  return " " .. cache.session
+  if should_update() then
+    vim.system(
+      { "tmux", "display-message", "-p", "#S" },
+      { text = true },
+      function(out)
+        if out and out.stdout then
+          cache.session = out.stdout:gsub("[\n\r]", "")
+        end
+        cache.updating = false
+      end
+    )
+  end
+  return " " .. cache.session
 end
 
 local function get_windows()
-  vim.system(
-    { "tmux", "list-windows", "-F", "#{window_index}:#{window_name}:#{window_active}" },
-    { text = true },
-    function(out)
-      local windows = {}
-      for line in out.stdout:gmatch("[^\r\n]+") do
-        local idx, name, is_active = line:match("(%d+):([^:]*):(%d)")
-        if idx and name then
-          table.insert(windows, {
-            text = idx .. ":" .. name,
-            active = is_active == "1",
-          })
+  if should_update() then
+    vim.system(
+      { "tmux", "list-windows", "-F", "#{window_index}:#{window_name}:#{window_active}" },
+      { text = true },
+      function(out)
+        if out and out.stdout then
+          local windows = {}
+          for line in out.stdout:gmatch("[^\r\n]+") do
+            local idx, name, is_active = line:match("(%d+):([^:]*):(%d)")
+            if idx and name then
+              table.insert(windows, {
+                text = idx .. ":" .. name,
+                active = is_active == "1",
+              })
+            end
+          end
+          cache.windows = windows
         end
+        cache.updating = false
       end
-      cache.windows = windows
-    end
-  )
+    )
+  end
   return cache.windows
 end
 
