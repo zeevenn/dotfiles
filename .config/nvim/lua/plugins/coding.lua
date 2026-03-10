@@ -4,6 +4,29 @@ return {
     opts = {
       ensure_installed = {
         "css-lsp",
+        "emmet-ls", -- Emmet support for HTML/CSS
+      },
+    },
+  },
+
+  -- Enable Emmet for HTML, CSS, JSX, TSX, etc.
+  {
+    "neovim/nvim-lspconfig",
+    opts = {
+      servers = {
+        emmet_ls = {
+          filetypes = {
+            "html",
+            "css",
+            "scss",
+            "javascript",
+            "javascriptreact",
+            "typescript",
+            "typescriptreact",
+            "vue",
+            "svelte",
+          },
+        },
       },
     },
   },
