@@ -20,7 +20,7 @@ vim.g.root_spec = { "lsp", ".git", "cwd" }
 -- Must live here (before lazy.setup) so vim.cmd.edit won't trigger plugin loading prematurely.
 do
   local argc = vim.fn.argc(-1)
-  local is_dir_arg = argc == 1 and vim.fn.isdirectory(vim.fn.argv(0)) == 1
+  local is_dir_arg = argc == 1 and vim.fn.isdirectory(vim.fn.argv(0) --[[@as string]]) == 1
   local readme
   if argc == 0 or is_dir_arg then
     for _, name in ipairs({ "README.md", "readme.md", "README.MD", "README.txt", "README" }) do
@@ -33,6 +33,7 @@ do
   if readme and argc == 0 then
     vim.api.nvim_buf_set_name(0, readme)
     vim.cmd.edit({ bang = true })
+    vim.cmd("filetype detect")
   elseif readme and is_dir_arg then
     -- vi . : let snacks open explorer + dashboard together, then swap dashboard → README
     vim.api.nvim_create_autocmd("User", {
@@ -44,6 +45,7 @@ do
           if vim.bo[buf].filetype == "snacks_dashboard" then
             vim.api.nvim_set_current_win(win)
             vim.cmd("edit " .. vim.fn.fnameescape(readme))
+            vim.cmd("filetype detect")
             return
           end
         end
