@@ -47,6 +47,15 @@ return {
           "**/.conform.*",
         },
         jump = { close = true },
+        -- Press / to toggle between input (search) and list (files)
+        -- Press Esc in input to focus list instead of closing picker
+        win = {
+          input = {
+            keys = {
+              ["<Esc>"] = { "toggle_focus", mode = { "i" } }, -- Esc moves to list instead of normal mode
+            },
+          },
+        },
       }
 
       -- Automatically open explorer in project directory
