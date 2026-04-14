@@ -79,13 +79,6 @@ return {
       return opts
     end,
     keys = {
-      {
-        "<leader><space>",
-        LazyVim.pick("files", {
-          cwd = LazyVim.root({ git = true }),
-        }),
-        desc = "Find Files (Root Dir)",
-      },
       -- Disable snacks.picker git diff keymaps (conflicts with diffview)
       { "<leader>gd", false },
       { "<leader>gD", false },
