@@ -5,8 +5,9 @@
 # Get dotfiles directory
 get_dotfiles_dir() {
   local script_path="${BASH_SOURCE[1]}"
-  local script_dir="$(cd "$(dirname "$script_path")" && pwd)"
-  echo "$(cd "$script_dir/../.." && pwd)"
+  local script_dir
+  script_dir="$(cd "$(dirname "$script_path")" && pwd)"
+  cd "$script_dir/../.." && pwd
 }
 
 # Create symlink
@@ -22,7 +23,8 @@ link_file() {
   
   # If target exists and is not a symlink, backup
   if [ -e "$dst" ] && [ ! -L "$dst" ]; then
-    local backup="${dst}.backup.$(date +%Y%m%d_%H%M%S)"
+    local backup
+    backup="${dst}.backup.$(date +%Y%m%d_%H%M%S)"
     echo "⚠️  Backing up existing file: $dst -> $backup"
     mv "$dst" "$backup"
   fi
@@ -80,7 +82,7 @@ add_to_path() {
   
   # Add to config file
   echo "export PATH=\"$path_to_add:\$PATH\"" >> "$shell_config"
-  echo "✓   Added $path_to_add to PATH (in $(basename $shell_config))"
+  echo "✓   Added $path_to_add to PATH (in $(basename "$shell_config"))"
 }
 
 # Print colored messages
@@ -111,7 +113,7 @@ ask() {
     local prompt_text="$prompt [y/N]: "
   fi
   
-  read -p "$prompt_text" response
+  read -rp "$prompt_text" response
   response=${response:-$default}
   
   if [[ "$response" =~ ^[Yy]$ ]]; then

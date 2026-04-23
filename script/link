@@ -9,30 +9,31 @@ set -e
 DOTFILES_ROOT="${DOTFILES_ROOT:-$(cd "$(dirname "$0")/.." && pwd -P)}"
 
 info () {
-  printf "[ \033[00;34m..\033[0m ] $1\n"
+  printf "[ \033[00;34m..\033[0m ] %s\n" "$1"
 }
 
 success () {
-  printf "[ \033[00;32mOK\033[0m ] $1\n"
+  printf "[ \033[00;32mOK\033[0m ] %s\n" "$1"
 }
 
 user () {
-  printf "[ \033[0;33m??\033[0m ] $1\n"
+  printf "[ \033[0;33m??\033[0m ] %s\n" "$1"
 }
 
 link_file () {
   local src=$1 dst=$2
 
-  local overwrite= backup= skip=
-  local action=
+  local overwrite='' backup='' skip=''
+  local action=''
 
-  if [ -f "$dst" -o -d "$dst" -o -L "$dst" ]
+  if [ -f "$dst" ] || [ -d "$dst" ] || [ -L "$dst" ]
   then
 
     if [ "$overwrite_all" == "false" ] && [ "$backup_all" == "false" ] && [ "$skip_all" == "false" ]
     then
 
-      local currentSrc="$(readlink $dst)"
+      local currentSrc
+      currentSrc="$(readlink "$dst")"
 
       if [ "$currentSrc" == "$src" ]
       then
@@ -43,7 +44,7 @@ link_file () {
 
         user "File already exists: $dst ($(basename "$src")), what do you want to do?\n\
         [s]kip, [S]kip all, [o]verwrite, [O]verwrite all, [b]ackup, [B]ackup all?"
-        read -n 1 action
+        read -rn 1 action
         echo
 
         case "$action" in
@@ -118,7 +119,8 @@ install_dotfiles () {
   do
     [ -f "$src" ] || continue
 
-    local parent_dir=$(basename "$(dirname "$src")")
+    local parent_dir
+    parent_dir=$(basename "$(dirname "$src")")
 
     # Skip dot directories (handled separately below)
     [[ "$parent_dir" == .* ]] && continue
@@ -148,7 +150,8 @@ install_dot_dirs () {
     # Remove trailing slash
     src_dir="${src_dir%/}"
 
-    local dir_name=$(basename "$src_dir")
+    local dir_name
+    dir_name=$(basename "$src_dir")
 
     # Skip special directories
     [[ "$dir_name" == ".git" ]] && continue
@@ -164,7 +167,8 @@ install_dot_dirs () {
     do
       [ -e "$src" ] || continue
 
-      local item_name=$(basename "$src")
+      local item_name
+      item_name=$(basename "$src")
       local dst="$dst_dir/$item_name"
 
       if link_file "$src" "$dst"; then

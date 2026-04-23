@@ -8,26 +8,26 @@ DOTFILES_ROOT=$(pwd -P)
 set -e
 
 info() {
-  printf "[ \033[00;34m..\033[0m ] $1\n"
+  printf "[ \033[00;34m..\033[0m ] %s\n" "$1"
 }
 
 user() {
-  printf "[ \033[0;33m??\033[0m ] $1\n"
+  printf "[ \033[0;33m??\033[0m ] %s\n" "$1"
 }
 
 success() {
-  printf "[ \033[00;32mOK\033[0m ] $1\n"
+  printf "[ \033[00;32mOK\033[0m ] %s\n" "$1"
 }
 
 fail() {
-  printf "[\033[0;31mFAIL\033[0m] $1\n"
+  printf "[\033[0;31mFAIL\033[0m] %s\n" "$1"
   echo ''
   exit
 }
 
 section() {
   echo ''
-  printf "\033[1;36m==>\033[0m \033[1m$1\033[0m\n"
+  printf "\033[1;36m==>\033[0m \033[1m%s\033[0m\n" "$1"
 }
 
 setup_gitconfig() {
@@ -40,11 +40,15 @@ setup_gitconfig() {
     fi
 
     user ' - What is your github author name?'
-    read -e git_authorname
+    read -er git_authorname
     user ' - What is your github author email?'
-    read -e git_authoremail
+    read -er git_authoremail
 
-    sed -e "s/AUTHORNAME/$git_authorname/g" -e "s/AUTHOREMAIL/$git_authoremail/g" -e "s/GIT_CREDENTIAL_HELPER/$git_credential/g" .config/git/config.local.example >.config/git/config.local
+    _esc() { printf '%s' "$1" | sed 's/[&\]/\\&/g'; }
+    sed -e "s|AUTHORNAME|$(_esc "$git_authorname")|g" \
+      -e "s|AUTHOREMAIL|$(_esc "$git_authoremail")|g" \
+      -e "s|GIT_CREDENTIAL_HELPER|$git_credential|g" \
+      .config/git/config.local.example >.config/git/config.local
 
     success 'gitconfig'
   else
@@ -59,12 +63,12 @@ setup_ssh_key() {
     info 'setup SSH key'
 
     user ' - Generate SSH key? [y/n]'
-    read -e ssh_input
+    read -er ssh_input
 
     case "$ssh_input" in
     y | Y | yes | YES)
       user ' - Enter SSH key comment (usually your email)'
-      read -e ssh_comment
+      read -er ssh_comment
 
       # Create .ssh directory if it doesn't exist
       mkdir -p "$HOME/.ssh"
@@ -147,7 +151,7 @@ setup_proxy() {
     info 'setup proxy'
 
     user ' - Enable proxy? [y=default(http://127.0.0.1:7890)/n=no/custom URL]'
-    read -e proxy_input
+    read -er proxy_input
 
     case "$proxy_input" in
     y | Y | yes | YES)
@@ -191,7 +195,7 @@ install_zinit() {
 
   if [ ! -d "$ZINIT_HOME" ]; then
     info 'installing Zinit'
-    mkdir -p "$(dirname $ZINIT_HOME)"
+    mkdir -p "$(dirname "$ZINIT_HOME")"
     git clone https://github.com/zdharma-continuum/zinit.git "$ZINIT_HOME"
     success 'Zinit installed'
   else
@@ -204,7 +208,7 @@ install_tpm() {
 
   if [ ! -d "$TPM_HOME" ]; then
     info 'installing TPM (Tmux Plugin Manager)'
-    mkdir -p "$(dirname $TPM_HOME)"
+    mkdir -p "$(dirname "$TPM_HOME")"
     git clone https://github.com/tmux-plugins/tpm "$TPM_HOME"
     success 'TPM installed'
   else
