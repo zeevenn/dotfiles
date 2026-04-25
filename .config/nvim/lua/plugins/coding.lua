@@ -37,6 +37,7 @@ return {
     opts = {
       spec = {
         { "<leader>y", group = "yank/copy" },
+        { "<leader>n", group = "npm/package" },
       },
     },
   },
@@ -156,6 +157,27 @@ return {
           app_version = true,
           device = true,
         },
+      },
+    },
+  },
+
+  -- Show package versions in package.json
+  {
+    "vuki656/package-info.nvim",
+    dependencies = { "MunifTanjim/nui.nvim" },
+    opts = {},
+    keys = {
+      { "<leader>ns", "<cmd>lua require('package-info').show()<cr>", desc = "Show package info", ft = "json" },
+      { "<leader>nc", "<cmd>lua require('package-info').hide()<cr>", desc = "Hide package info", ft = "json" },
+      { "<leader>nt", "<cmd>lua require('package-info').toggle()<cr>", desc = "Toggle package info", ft = "json" },
+      { "<leader>nu", "<cmd>lua require('package-info').update()<cr>", desc = "Update package", ft = "json" },
+      { "<leader>nd", "<cmd>lua require('package-info').delete()<cr>", desc = "Delete package", ft = "json" },
+      { "<leader>ni", "<cmd>lua require('package-info').install()<cr>", desc = "Install package", ft = "json" },
+      {
+        "<leader>np",
+        "<cmd>lua require('package-info').change_version()<cr>",
+        desc = "Change package version",
+        ft = "json",
       },
     },
   },
