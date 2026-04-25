@@ -1,13 +1,5 @@
 return {
   {
-    "zbirenbaum/copilot.lua",
-    opts = {
-      disable_limit_reached_message = true,
-      copilot_node_command = vim.fn.expand("~/.local/share/fnm/node-versions/v22.20.0/installation/bin/node"),
-    },
-  },
-
-  {
     "folke/sidekick.nvim",
     opts = {
       cli = {
@@ -16,11 +8,7 @@ return {
           backend = "tmux",
         },
       },
-      copilot = {
-        status = {
-          level = vim.log.levels.OFF,
-        },
-      },
+      nes = { enabled = false },
     },
   },
 }
