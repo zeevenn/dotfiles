@@ -7,13 +7,13 @@
 -- Or remove existing autocmds by their group name (which is prefixed with `lazyvim_` for the defaults)
 -- e.g. vim.api.nvim_del_augroup_by_name("lazyvim_wrap_spell")
 
+-- Remove default wrap+spell group (spell breaks Chinese)
 vim.api.nvim_del_augroup_by_name("lazyvim_wrap_spell")
 
--- wrap in text filetypes
+-- Re-add wrap without spell
 vim.api.nvim_create_autocmd("FileType", {
   group = vim.api.nvim_create_augroup("wrap_text", { clear = true }),
-  -- In markdown will wrap table, it's very annoying for reading
-  pattern = { "text", "plaintex", "typst", "gitcommit" },
+  pattern = { "text", "plaintex", "typst", "gitcommit", "markdown" },
   callback = function()
     vim.opt_local.wrap = true
   end,
