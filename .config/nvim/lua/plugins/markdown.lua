@@ -1,12 +1,4 @@
 return {
-  -- Only render in Avante, not in regular markdown files
-  {
-    "MeanderingProgrammer/render-markdown.nvim",
-    opts = {
-      file_types = { "Avante" },
-    },
-  },
-
   -- Upload images to PicGo image bed
   {
     "askfiy/nvim-picgo",
