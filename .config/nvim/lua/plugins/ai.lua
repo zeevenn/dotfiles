@@ -15,11 +15,6 @@ return {
           enabled = true,
           backend = "tmux",
         },
-        win = {
-          split = {
-            width = 60,
-          },
-        },
       },
       copilot = {
         status = {
