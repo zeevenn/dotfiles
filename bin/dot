@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 #
 # dot
 #
@@ -7,56 +7,102 @@
 
 set -e
 
-parentDirectory="$(cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd -P)"
-dotfilesDirectory="$(cd "$( dirname "$parentDirectory" )" && pwd -P)"
+parentDirectory="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd -P)"
+dotfilesDirectory="$(cd "$(dirname "$parentDirectory")" && pwd -P)"
 
 displayUsageAndExit() {
-	echo "dot -- dotfiles management"
-	echo ""
-	echo "Usage: dot [options]"
-	echo ""
-	echo "Options:"
-	echo "  -e, --edit    Open dotfiles directory for editing"
-	echo "  -h, --help    Show this help message and exit"
-	exit
+  echo "dot -- dotfiles management"
+  echo ""
+  echo "Usage: dot [options]"
+  echo ""
+  echo "Options:"
+  echo "  -e, --edit    Open dotfiles directory for editing"
+  echo "  -f, --force   Run all steps unconditionally"
+  echo "  -h, --help    Show this help message and exit"
+  exit
 }
 
+FORCE=""
+
 while test $# -gt 0; do
-	case "$1" in
-		"-h"|"--help")
-			displayUsageAndExit
-			;;
-		"-e"|"--edit")
-			exec "$EDITOR" "$dotfilesDirectory"
-			exit
-			;;
-		*)
-			echo "Invalid option: $1"
-			displayUsageAndExit
-			;;
-	esac
-	shift
+  case "$1" in
+  "-h" | "--help")
+    displayUsageAndExit
+    ;;
+  "-e" | "--edit")
+    exec "$EDITOR" "$dotfilesDirectory"
+    exit
+    ;;
+  "-f" | "--force")
+    FORCE=1
+    ;;
+  *)
+    echo "Invalid option: $1"
+    displayUsageAndExit
+    ;;
+  esac
+  shift
 done
 
-export ZSH=$HOME/.dotfiles
+export ZSH="$HOME/.dotfiles"
 
 # Update dotfiles themselves
 echo "› git pull"
-git -C $ZSH pull
+
+PREV_HEAD=$(git -C "$ZSH" rev-parse HEAD 2>/dev/null || echo "")
+
+git -C "$ZSH" pull
+
+NEW_HEAD=$(git -C "$ZSH" rev-parse HEAD 2>/dev/null || echo "")
+
+FIRST_RUN=0
+if [ -z "$PREV_HEAD" ]; then
+  FIRST_RUN=1
+  CHANGED_FILES=""
+elif [ "$PREV_HEAD" = "$NEW_HEAD" ]; then
+  CHANGED_FILES=""
+else
+  CHANGED_FILES=$(git -C "$ZSH" diff --name-only "$PREV_HEAD".."$NEW_HEAD" 2>/dev/null || echo "")
+fi
+
+should_run() {
+  local trigger_matched="$1"
+  [ -n "$FORCE" ] || [ "$FIRST_RUN" = "1" ] || [ "$trigger_matched" = "1" ]
+}
+
+if echo "$CHANGED_FILES" | grep -q "macos/set-defaults"; then
+  DEFAULTS_CHANGED=1
+else
+  DEFAULTS_CHANGED=0
+fi
+
+if echo "$CHANGED_FILES" | grep -qE "(^Brewfile$|install\.sh$)"; then
+  INSTALL_CHANGED=1
+else
+  INSTALL_CHANGED=0
+fi
 
 # Set macOS defaults
-$ZSH/macos/set-defaults.sh
+if should_run "$DEFAULTS_CHANGED"; then
+  "$ZSH/macos/set-defaults.sh"
+else
+  echo "› skipping set-defaults (no changes)"
+fi
 
 # Set macOS hostname
-$ZSH/macos/set-hostname.sh
+"$ZSH/macos/set-hostname.sh"
 
 # Install homebrew
-$ZSH/homebrew/install.sh 2>&1
+"$ZSH/homebrew/install.sh" 2>&1
 
 # Create/update symlinks
 echo "› script/link"
-$ZSH/script/link
+"$ZSH/script/link"
 
 # Install software
-echo "› script/install"
-$ZSH/script/install
+if should_run "$INSTALL_CHANGED"; then
+  echo "› script/install"
+  "$ZSH/script/install"
+else
+  echo "› skipping script/install (no changes)"
+fi
