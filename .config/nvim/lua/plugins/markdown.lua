@@ -1,4 +1,6 @@
 return {
+  { "MeanderingProgrammer/render-markdown.nvim", enabled = false },
+
   -- Upload images to PicGo image bed
   {
     "askfiy/nvim-picgo",
