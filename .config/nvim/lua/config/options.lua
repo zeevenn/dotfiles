@@ -13,8 +13,9 @@ vim.opt.autoread = true
 vim.o.exrc = true
 vim.opt.secure = true
 
--- Only use .git for root detection (default includes "lua" which causes nvim config to be detected as root)
-vim.g.root_spec = { "lsp", ".git", "cwd" }
+-- lua_ls root is .config/nvim/, exclude it so .git detection finds ~/.dotfiles/ instead
+vim.g.root_lsp_ignore = { "lua_ls" }
+vim.g.root_spec = { "lsp", { ".git" }, "cwd" }
 
 -- Open README on startup instead of dashboard.
 -- Must live here (before lazy.setup) so vim.cmd.edit won't trigger plugin loading prematurely.
