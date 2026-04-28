@@ -11,17 +11,22 @@ return {
   {
     "folke/snacks.nvim",
     init = function()
-      -- Setup autocmd ONCE during plugin initialization (not in opts function)
-      -- Refresh git status when focus returns to Neovim (e.g., after git commit)
+      -- Refresh explorer git status when focus returns to Neovim (e.g., after git commit in terminal)
+      -- Needed because watch.lua's fs_event may not reliably fire while Neovim is in the background.
       vim.api.nvim_create_autocmd("FocusGained", {
         group = vim.api.nvim_create_augroup("snacks_explorer_git_refresh", { clear = true }),
         callback = function()
-          -- Update all open explorers (will auto-refresh git status)
           local ok, snacks = pcall(require, "snacks")
-          if ok and snacks.picker then
-            local explorers = snacks.picker.get({ source = "explorer" })
-            for _, picker in ipairs(explorers) do
-              picker:action("explorer_update")
+          if not ok or not snacks.picker then
+            return
+          end
+          local Tree = require("snacks.explorer.tree")
+          local explorers = snacks.picker.get({ source = "explorer" })
+          for _, picker in ipairs(explorers) do
+            if not picker.closed then
+              Tree:refresh(picker:cwd())
+              picker.list:set_target()
+              picker:find()
             end
           end
         end,
