@@ -11,6 +11,9 @@ keymap.set("n", "-", "<C-x>", { desc = "Decrement number" })
 -- https://www.reddit.com/r/neovim/comments/1mcvzmi/lazyvim_space_key_occasionally_acts_as_regular/
 keymap.set("n", " ", "<Nop>", { silent = true })
 
+-- Open current file's directory in Finder
+keymap.set("n", "<leader>fo", "<cmd>silent !open %:h<cr>", { desc = "Open in Finder" })
+
 -- git open
 keymap.set("n", "<leader>go", function()
   vim.cmd("!git open")
