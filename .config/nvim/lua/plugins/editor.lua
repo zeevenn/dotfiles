@@ -43,6 +43,12 @@ return {
         exclude = { "**/.git", "**/.DS_Store", "**/node_modules", "**/dist" },
       }
 
+      opts.picker.sources.grep = {
+        hidden = true,
+        ignored = true,
+        exclude = { "**/.git", "**/.DS_Store", "**/node_modules", "**/dist" },
+      }
+
       opts.picker.sources.explorer = {
         hidden = true,
         ignored = true,
