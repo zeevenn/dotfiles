@@ -24,7 +24,11 @@ return {
           local explorers = snacks.picker.get({ source = "explorer" })
           for _, picker in ipairs(explorers) do
             if not picker.closed then
-              Tree:refresh(picker:cwd())
+              -- Use git root instead of cwd: git.lua's refresh() only invalidates
+              -- cache when path == root or path is a child of root, so passing a
+              -- subdirectory (deep cwd) would never match the cached git root key.
+              local git_root = Snacks.git.get_root(picker:cwd()) or picker:cwd()
+              Tree:refresh(git_root)
               picker.list:set_target()
               picker:find()
             end
