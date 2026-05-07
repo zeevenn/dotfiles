@@ -10,6 +10,7 @@ brew 'bat'                # Better cat with syntax highlighting
 brew 'ripgrep'            # Fast grep
 brew 'fd'                 # Fast find
 brew 'lazygit'            # Git TUI (nvim integration)
+brew 'gh'                 # GitHub CLI
 brew 'nvim'               # Neovim
 brew 'tmux'               # Terminal multiplexer
 brew 'yazi'               # File manager
