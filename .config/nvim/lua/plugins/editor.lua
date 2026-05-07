@@ -11,27 +11,35 @@ return {
   {
     "folke/snacks.nvim",
     init = function()
-      -- Refresh explorer git status when focus returns to Neovim (e.g., after git commit in terminal)
-      -- Needed because watch.lua's fs_event may not reliably fire while Neovim is in the background.
+      local function refresh_explorer_git()
+        local ok, snacks = pcall(require, "snacks")
+        if not ok or not snacks.picker then
+          return
+        end
+        local ExplorerGit = require("snacks.explorer.git")
+        for _, picker in ipairs(snacks.picker.get({ source = "explorer" })) do
+          if not picker.closed then
+            local git_root = Snacks.git.get_root(picker:cwd()) or picker:cwd()
+            ExplorerGit.refresh(git_root)
+            picker.list:set_target()
+            picker:find()
+          end
+        end
+      end
+
+      -- Refresh when Neovim regains focus (e.g., after using an external git tool)
       vim.api.nvim_create_autocmd("FocusGained", {
         group = vim.api.nvim_create_augroup("snacks_explorer_git_refresh", { clear = true }),
-        callback = function()
-          local ok, snacks = pcall(require, "snacks")
-          if not ok or not snacks.picker then
-            return
-          end
-          local Tree = require("snacks.explorer.tree")
-          local explorers = snacks.picker.get({ source = "explorer" })
-          for _, picker in ipairs(explorers) do
-            if not picker.closed then
-              -- Use git root instead of cwd: git.lua's refresh() only invalidates
-              -- cache when path == root or path is a child of root, so passing a
-              -- subdirectory (deep cwd) would never match the cached git root key.
-              local git_root = Snacks.git.get_root(picker:cwd()) or picker:cwd()
-              Tree:refresh(git_root)
-              picker.list:set_target()
-              picker:find()
-            end
+        callback = refresh_explorer_git,
+      })
+
+      -- Refresh when lazygit closes (runs inside Neovim terminal, so FocusGained never fires)
+      vim.api.nvim_create_autocmd("TermClose", {
+        group = vim.api.nvim_create_augroup("snacks_explorer_lazygit_refresh", { clear = true }),
+        callback = function(ev)
+          local buf_name = vim.api.nvim_buf_get_name(ev.buf)
+          if buf_name:find("lazygit", 1, true) then
+            vim.schedule(refresh_explorer_git)
           end
         end,
       })
