@@ -167,6 +167,9 @@ install_dot_dirs () {
     do
       [ -e "$src" ] || continue
 
+      # Skip files not tracked by git
+      git -C "$DOTFILES_ROOT" ls-files --error-unmatch "$src" &>/dev/null || continue
+
       local item_name
       item_name=$(basename "$src")
       local dst="$dst_dir/$item_name"
