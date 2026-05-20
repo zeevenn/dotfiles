@@ -11,34 +11,34 @@ return {
   {
     "folke/snacks.nvim",
     init = function()
+      -- Workaround: snacks explorer git watcher doesn't reliably detect external
+      -- git operations (known issue #1630/#2030). Use Tree:refresh(git_root) to
+      -- force full tree + git cache invalidation.
       local function refresh_explorer_git()
         local ok, snacks = pcall(require, "snacks")
         if not ok or not snacks.picker then
           return
         end
-        local ExplorerGit = require("snacks.explorer.git")
+        local Tree = require("snacks.explorer.tree")
         for _, picker in ipairs(snacks.picker.get({ source = "explorer" })) do
           if not picker.closed then
             local git_root = Snacks.git.get_root(picker:cwd()) or picker:cwd()
-            ExplorerGit.refresh(git_root)
+            Tree:refresh(git_root)
             picker.list:set_target()
             picker:find()
           end
         end
       end
 
-      -- Refresh when Neovim regains focus (e.g., after using an external git tool)
       vim.api.nvim_create_autocmd("FocusGained", {
-        group = vim.api.nvim_create_augroup("snacks_explorer_git_refresh", { clear = true }),
+        group = vim.api.nvim_create_augroup("explorer_git_refresh", { clear = true }),
         callback = refresh_explorer_git,
       })
 
-      -- Refresh when lazygit closes (runs inside Neovim terminal, so FocusGained never fires)
       vim.api.nvim_create_autocmd("TermClose", {
-        group = vim.api.nvim_create_augroup("snacks_explorer_lazygit_refresh", { clear = true }),
+        group = vim.api.nvim_create_augroup("explorer_git_refresh_term", { clear = true }),
         callback = function(ev)
-          local buf_name = vim.api.nvim_buf_get_name(ev.buf)
-          if buf_name:find("lazygit", 1, true) then
+          if vim.api.nvim_buf_get_name(ev.buf):find("lazygit", 1, true) then
             vim.schedule(refresh_explorer_git)
           end
         end,
