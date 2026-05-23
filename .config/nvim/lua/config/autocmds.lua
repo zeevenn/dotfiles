@@ -7,6 +7,16 @@
 -- Or remove existing autocmds by their group name (which is prefixed with `lazyvim_` for the defaults)
 -- e.g. vim.api.nvim_del_augroup_by_name("lazyvim_wrap_spell")
 
+-- Auto-reload files changed outside Neovim (supplements LazyVim's FocusGained checktime)
+vim.api.nvim_create_autocmd({ "BufEnter", "CursorHold" }, {
+  group = vim.api.nvim_create_augroup("auto_checktime", { clear = true }),
+  callback = function()
+    if vim.o.buftype ~= "nofile" then
+      vim.cmd("checktime")
+    end
+  end,
+})
+
 -- Remove default wrap+spell group (spell breaks Chinese)
 vim.api.nvim_del_augroup_by_name("lazyvim_wrap_spell")
 
