@@ -1,7 +1,6 @@
-# Use zsh's built-in git completion
-# Ensure completion system is loaded
-autoload -Uz compinit
-compinit -i
+# Use zsh's built-in git completion (not bash-completion wrapper)
+# Remove Homebrew's bash-completion-based _git from fpath
+fpath=(${fpath:#/opt/homebrew/share/zsh/site-functions})
 
 # Make git aliases use git completion
 # gsw -> git switch, gb -> git branch, etc.

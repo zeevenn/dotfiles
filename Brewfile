@@ -14,15 +14,13 @@ brew 'gh'                 # GitHub CLI
 brew 'nvim'               # Neovim
 brew 'tmux'               # Terminal multiplexer
 brew 'yazi'               # File manager
+brew 'gum'                # Pretty shell script prompts
 
 # Development tools
 brew 'fnm'                # Fast Node Manager
-brew 'watchman'           # File watcher for React Native
 brew 'uv'                 # Python package and project manager
 brew 'rbenv'              # Ruby version manager
-cask 'zulu@17'            # Java 17 for Android development
 brew 'awscli'
-brew 'fvm'                # Flutter version manager
 
 # System tools
 brew 'imagemagick'        # Image processing

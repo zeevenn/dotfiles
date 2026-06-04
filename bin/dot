@@ -82,6 +82,12 @@ else
   INSTALL_CHANGED=0
 fi
 
+if echo "$CHANGED_FILES" | grep -qE "^(java|react-native|flutter)/"; then
+  OPTIONAL_CHANGED=1
+else
+  OPTIONAL_CHANGED=0
+fi
+
 # Set macOS defaults
 if should_run "$DEFAULTS_CHANGED"; then
   "$ZSH/macos/set-defaults.sh"
@@ -99,10 +105,18 @@ fi
 echo "› script/link"
 "$ZSH/script/link"
 
-# Install software
+# Install core dependencies
 if should_run "$INSTALL_CHANGED"; then
+  echo "› brew tap"
+  brew tap laishulu/homebrew
+  echo "› brew bundle"
+  brew bundle --file="$ZSH/Brewfile"
   echo "› script/install"
-  "$ZSH/script/install"
+  if [ "$OPTIONAL_CHANGED" = "1" ] || [ -n "$FORCE" ]; then
+    "$ZSH/script/install" --all
+  else
+    "$ZSH/script/install"
+  fi
 else
-  echo "› skipping script/install (no changes)"
+  echo "› skipping install (no changes)"
 fi

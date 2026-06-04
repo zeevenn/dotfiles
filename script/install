@@ -1,17 +1,8 @@
 #!/usr/bin/env bash
-#
-# Run dotfiles topic installers.
-#
-# Usage:
-#   script/install          # core topics + interactive selection for optional
-#   script/install java     # install specific topic(s)
-#   script/install --all    # install everything (no prompt)
-
 set -e
 
 cd "$(dirname "$0")"/.. || exit 1
 
-# Topics that require explicit opt-in
 OPTIONAL_TOPICS=(java react-native flutter)
 
 is_optional() {
@@ -29,42 +20,22 @@ install_topic() {
   sh -c "$installer"
 }
 
-# Parse arguments
 INSTALL_ALL=0
-SELECTED_TOPICS=()
-
 for arg in "$@"; do
-  if [[ "$arg" == "--all" ]]; then
-    INSTALL_ALL=1
-  else
-    SELECTED_TOPICS+=("$arg")
-  fi
+  [[ "$arg" == "--all" ]] && INSTALL_ALL=1
 done
 
-# If specific topics given, only run those
-if [[ ${#SELECTED_TOPICS[@]} -gt 0 ]]; then
-  for topic in "${SELECTED_TOPICS[@]}"; do
-    if [[ -f "./$topic/install.sh" ]]; then
-      install_topic "./$topic/install.sh"
-    else
-      echo "› topic '$topic' has no install.sh, skipping"
-    fi
-  done
-  exit 0
-fi
-
-# Interactive selection for optional topics
+SELECTED_TOPICS=()
 if [[ $INSTALL_ALL -eq 0 ]] && [[ -t 0 ]] && command -v gum &>/dev/null; then
   echo ""
   selected=$(gum choose --no-limit --header="Select optional topics to install:" "${OPTIONAL_TOPICS[@]}") || true
   if [[ -n "$selected" ]]; then
     while IFS= read -r topic; do
       SELECTED_TOPICS+=("$topic")
-    done <<< "$selected"
+    done <<<"$selected"
   fi
 fi
 
-# Run core topic installers
 find . -name install.sh -not -path "./script/*" -not -path "./homebrew/*" | sort | while read -r installer; do
   topic=$(echo "$installer" | cut -d'/' -f2)
   if is_optional "$topic"; then
@@ -73,7 +44,6 @@ find . -name install.sh -not -path "./script/*" -not -path "./homebrew/*" | sort
   install_topic "$installer"
 done
 
-# Run selected optional topics
 if [[ $INSTALL_ALL -eq 1 ]]; then
   SELECTED_TOPICS=("${OPTIONAL_TOPICS[@]}")
 fi

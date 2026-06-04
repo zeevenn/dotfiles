@@ -231,13 +231,21 @@ section "Creating Symlinks"
 "$DOTFILES_ROOT/script/link"
 
 section "Installing Dependencies"
-# If we're on a Mac, let's install and setup homebrew.
 if [ "$(uname -s)" == "Darwin" ]; then
-  if source bin/dot 2>&1 | while read -r data; do info "$data"; done; then
-    success "dependencies installed"
-  else
-    fail "error installing dependencies"
-  fi
+  # Install Homebrew
+  "$DOTFILES_ROOT/homebrew/install.sh"
+
+  # Install core packages
+  info "brew tap"
+  brew tap laishulu/homebrew
+  info "brew bundle"
+  brew bundle --file="$DOTFILES_ROOT/Brewfile"
+  success "brew dependencies installed"
+
+  # Run topic installers
+  info "script/install"
+  "$DOTFILES_ROOT/script/install"
+  success "topic installers done"
 fi
 
 echo ''
