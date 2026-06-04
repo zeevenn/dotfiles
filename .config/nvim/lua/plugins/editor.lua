@@ -182,23 +182,6 @@ return {
     end,
   },
 
-  -- Keep scrolloff at the end of file
-  {
-    "Aasim-A/scrollEOF.nvim",
-    event = "BufReadPost",
-    opts = {
-      disabled_filetypes = {
-        "snacks_terminal", -- Fix flickering in LazyGit and terminals
-        "snacks_picker_list", -- Fix flickering in snacks.explorer
-        "snacks_picker_input",
-        "snacks_picker_preview",
-        "snacks_dashboard",
-        "snacks_notif",
-        "snacks_notif_history",
-      },
-    },
-  },
-
   {
     "max397574/better-escape.nvim",
     event = "InsertEnter",
