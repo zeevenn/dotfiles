@@ -56,5 +56,7 @@ unset config_files
 
 # zoxide must be initialized at the end of shell config
 if command -v zoxide &> /dev/null; then
-  eval "$(zoxide init zsh)"
+  eval "$(zoxide init zsh --no-cmd)"
+  alias z='__zoxide_z'
+  alias zi='__zoxide_zi'
 fi
