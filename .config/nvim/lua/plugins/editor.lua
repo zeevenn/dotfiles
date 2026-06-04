@@ -186,6 +186,7 @@ return {
     "max397574/better-escape.nvim",
     event = "InsertEnter",
     config = function()
+      ---@diagnostic disable-next-line: missing-fields
       require("better_escape").setup({
         mappings = {
           t = { j = { false } }, -- lazygit navigation fix
