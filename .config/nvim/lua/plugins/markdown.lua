@@ -1,4 +1,9 @@
 return {
+  {
+    "MeanderingProgrammer/render-markdown.nvim",
+    enabled = false,
+  },
+
   -- Upload images to PicGo image bed
   {
     "askfiy/nvim-picgo",
@@ -68,6 +73,7 @@ return {
     dependencies = { "selimacerbas/live-server.nvim" },
     config = function()
       require("markdown_preview").setup({
+        instance_mode = "multi",
         port = 8421,
         open_browser = true,
         debounce_ms = 300,
