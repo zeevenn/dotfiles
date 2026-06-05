@@ -33,10 +33,6 @@ brew 'resvg'              # SVG processing
 brew 'yt-dlp'             # YouTube downloader
 brew 'grc'                # Colorize command output
 
-# MacOS Input Source Manager
-brew 'macism'
-cask 'input-source-pro'
-
 # GUI applications
 cask 'ghostty'            # Terminal emulator
 cask 'notion'             # Note-taking app

@@ -155,32 +155,6 @@ return {
     },
   },
 
-  -- Auto switch input method
-  {
-    "keaising/im-select.nvim",
-    event = "VeryLazy",
-    opts = {
-      default_im_select = "com.apple.keylayout.ABC",
-      default_command = "macism",
-    },
-    config = function(_, opts)
-      require("im_select").setup(opts)
-
-      -- Switch to English on window/buffer switch
-      -- Use Job API instead of system() to avoid blocking and memory buildup
-      local im_group = vim.api.nvim_create_augroup("im_select_extra", { clear = true })
-      vim.api.nvim_create_autocmd({ "WinEnter", "BufEnter", "FocusGained" }, {
-        group = im_group,
-        callback = function()
-          -- Use jobstart to avoid blocking and memory accumulation
-          vim.fn.jobstart({ "macism", "com.apple.keylayout.ABC" }, {
-            detach = true,
-            on_exit = function() end,
-          })
-        end,
-      })
-    end,
-  },
 
   {
     "max397574/better-escape.nvim",
