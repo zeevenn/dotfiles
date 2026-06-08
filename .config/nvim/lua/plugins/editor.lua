@@ -69,6 +69,11 @@ return {
           "**/.DS_Store",
           "**/.conform.*",
         },
+        transform = function(item)
+          if item.hidden and not item.ignored then
+            item.hidden = false
+          end
+        end,
         jump = { close = true },
         -- Press / to toggle between input (search) and list (files)
         -- Press Esc in input to focus list instead of closing picker
@@ -154,7 +159,6 @@ return {
       { "<leader>gM", "<cmd>DiffviewOpen main<cr>", desc = "Diff against main" },
     },
   },
-
 
   {
     "max397574/better-escape.nvim",
