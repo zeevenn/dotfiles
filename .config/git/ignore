@@ -3,3 +3,10 @@
 *.swp
 
 **/.claude/settings.local.json
+
+# Java / Eclipse JDT LS local project metadata
+.project
+.classpath
+.settings/
+.factorypath
+*.class
