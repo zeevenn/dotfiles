@@ -29,6 +29,15 @@ vim.api.nvim_create_autocmd("FileType", {
   end,
 })
 
+-- Hide "[Process exited 0]" noise from short-lived terminal dashboard jobs.
+vim.schedule(function()
+  for _, autocmd in ipairs(vim.api.nvim_get_autocmds({ group = "nvim.terminal", event = "TermClose" })) do
+    if autocmd.desc and autocmd.desc:find("%[Process exited%]") then
+      pcall(vim.api.nvim_del_autocmd, autocmd.id)
+    end
+  end
+end)
+
 -- Set Java tabwidth to 4
 vim.api.nvim_create_autocmd("FileType", {
   group = vim.api.nvim_create_augroup("java_indent", { clear = true }),

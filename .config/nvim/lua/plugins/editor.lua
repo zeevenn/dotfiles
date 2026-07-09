@@ -154,6 +154,7 @@ return {
         },
       },
       filesystem = {
+        hijack_netrw_behavior = "open_current",
         group_empty_dirs = true,
         scan_mode = "deep",
         filtered_items = {
