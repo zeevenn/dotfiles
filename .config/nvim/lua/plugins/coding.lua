@@ -4,31 +4,65 @@ return {
     opts = {
       ensure_installed = {
         "css-lsp",
-        "emmet-ls", -- Emmet support for HTML/CSS
+        "html-lsp", -- HTML LSP provides embedded CSS/JS completions
+        "emmet-language-server", -- Emmet support backed by VS Code's Emmet integration
       },
     },
   },
 
-  -- Enable Emmet for HTML, CSS, JSX, TSX, etc.
   {
-    "neovim/nvim-lspconfig",
-    opts = {
-      servers = {
-        emmet_ls = {
-          filetypes = {
-            "html",
-            "css",
-            "scss",
-            "javascript",
-            "javascriptreact",
-            "typescript",
-            "typescriptreact",
-            "vue",
-            "svelte",
-          },
-        },
-      },
-    },
+    "saghen/blink.cmp",
+    opts = function(_, opts)
+      local function in_raw_html_tag(tag)
+        if vim.bo.filetype ~= "html" then
+          return false
+        end
+
+        local row = vim.api.nvim_win_get_cursor(0)[1]
+        local before = table.concat(vim.api.nvim_buf_get_lines(0, 0, row, true), "\n"):lower()
+        local open = before:match(".*()<" .. tag .. "%f[%s>][^>]*>")
+        local close = before:match(".*()</" .. tag .. ">")
+        return open and (not close or open > close)
+      end
+
+      local function in_css_context()
+        return vim.tbl_contains({ "css", "scss", "less" }, vim.bo.filetype) or in_raw_html_tag("style")
+      end
+
+      local function cursor_between_braces()
+        local col = vim.api.nvim_win_get_cursor(0)[2]
+        local line = vim.api.nvim_get_current_line()
+        return line:sub(col, col) == "{" and line:sub(col + 1, col + 1) == "}"
+      end
+
+      local function open_css_block(cmp)
+        if not in_css_context() or not cursor_between_braces() then
+          return
+        end
+
+        vim.schedule(function()
+          local row, col = unpack(vim.api.nvim_win_get_cursor(0))
+          local line = vim.api.nvim_get_current_line()
+          local before = line:sub(1, col)
+          local after = line:sub(col + 1)
+          local base_indent = line:match("^%s*") or ""
+          local inner_indent = base_indent .. string.rep(" ", vim.fn.shiftwidth())
+
+          vim.api.nvim_buf_set_lines(0, row - 1, row, false, {
+            before,
+            inner_indent,
+            base_indent .. after,
+          })
+          vim.api.nvim_win_set_cursor(0, { row + 1, #inner_indent })
+          cmp.show({ providers = { "lsp" } })
+        end)
+
+        return true
+      end
+
+      opts.keymap = opts.keymap or {}
+      opts.keymap["<CR>"] = { open_css_block, "accept", "fallback" }
+    end,
   },
 
   {

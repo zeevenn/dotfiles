@@ -18,6 +18,17 @@ return {
   -- Show almost full path
   -- https://github.com/LazyVim/LazyVim/discussions/3010#discussioncomment-13666237
   {
+    "akinsho/bufferline.nvim",
+    opts = function(_, opts)
+      for _, offset in ipairs(opts.options.offsets or {}) do
+        if offset.filetype == "neo-tree" then
+          offset.text = ""
+        end
+      end
+    end,
+  },
+
+  {
     "nvim-lualine/lualine.nvim",
     event = "VeryLazy",
     opts = function(_, opts)

@@ -1,4 +1,6 @@
 -- Transform to show relative path in preview title
+local neotree_close_on_open = false
+
 local function lsp_preview_title(item)
   if item.file then
     -- Show path relative to cwd, keeping last 3 directories
@@ -110,20 +112,66 @@ return {
       -- Disable snacks.picker git diff keymaps (conflicts with diffview)
       { "<leader>gd", false },
       { "<leader>gD", false },
-      -- Custom explorer keymaps: e = quick (auto-close), E = persistent (stay open)
+    },
+  },
+
+  {
+    "nvim-neo-tree/neo-tree.nvim",
+    keys = {
       {
         "<leader>e",
         function()
-          Snacks.picker.pick("explorer", { jump = { close = true } })
+          neotree_close_on_open = true
+          require("neo-tree.command").execute({ toggle = true, dir = LazyVim.root(), reveal = true })
         end,
-        desc = "Explorer (auto-close)",
+        desc = "Explorer NeoTree (auto-close)",
       },
       {
         "<leader>E",
         function()
-          Snacks.picker.pick("explorer", { jump = { close = false } })
+          neotree_close_on_open = false
+          require("neo-tree.command").execute({ toggle = true, dir = LazyVim.root(), reveal = true })
         end,
-        desc = "Explorer (persistent)",
+        desc = "Explorer NeoTree (persistent)",
+      },
+    },
+    opts = {
+      event_handlers = {
+        {
+          event = "file_opened",
+          handler = function()
+            if neotree_close_on_open then
+              neotree_close_on_open = false
+              require("neo-tree.command").execute({ action = "close" })
+            end
+          end,
+        },
+        {
+          event = "neo_tree_window_after_close",
+          handler = function()
+            neotree_close_on_open = false
+          end,
+        },
+      },
+      filesystem = {
+        group_empty_dirs = true,
+        scan_mode = "deep",
+        filtered_items = {
+          visible = true,
+          hide_dotfiles = false,
+          hide_gitignored = false,
+          hide_ignored = false,
+          hide_hidden = false,
+          never_show = { ".git", ".DS_Store" },
+          never_show_by_pattern = { ".conform.*" },
+        },
+      },
+      default_component_configs = {
+        git_status = {
+          symbols = {
+            untracked = "󰘥",
+          },
+        },
       },
     },
   },
