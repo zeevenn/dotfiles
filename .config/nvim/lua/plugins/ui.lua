@@ -8,6 +8,7 @@ return {
       highlight_overrides = {
         mocha = function()
           return {
+            NeoTreeGitUntracked = { link = "NonText" },
             -- ["@variable"] = { fg = "#bbd1ca" },
           }
         end,
@@ -104,7 +105,7 @@ return {
               key = "e",
               desc = "Explorer",
               action = function()
-                require("neo-tree.command").execute({ dir = LazyVim.root(), reveal = true, position = "current" })
+                require("neo-tree.command").execute({ toggle = true, dir = LazyVim.root() })
               end,
             },
             { icon = " ", key = "f", desc = "Find File", action = ":lua Snacks.dashboard.pick('files')" },
