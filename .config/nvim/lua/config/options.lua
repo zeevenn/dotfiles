@@ -13,9 +13,8 @@ vim.opt.autoread = true
 vim.o.exrc = true
 vim.opt.secure = true
 
--- lua_ls root is .config/nvim/, exclude it so .git detection finds ~/.dotfiles/ instead
-vim.g.root_lsp_ignore = { "lua_ls" }
-vim.g.root_spec = { "lsp", { ".git" }, "cwd" }
+-- Prefer the Git root for repo-wide tools in monorepos; fall back to LSP/cwd outside Git
+vim.g.root_spec = { { ".git" }, "lsp", "cwd" }
 
 -- Prettier: require config for most filetypes, but always enable for markdown
 vim.g.lazyvim_prettier_needs_config = true
