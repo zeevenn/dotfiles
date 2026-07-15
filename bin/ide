@@ -36,7 +36,7 @@ if [ "$SESSION_EXISTS" = "false" ]; then
 
   # Select code pane and start vim
   tmux select-pane -t "$SESSION":1.1
-  tmux send-keys -t "$SESSION":1.1 "vi ." C-m
+  tmux send-keys -t "$SESSION":1.1 "vi" C-m
 
   # Create second window (shell)
   tmux new-window -t "$SESSION":2 -n zsh -c "$DIR"
