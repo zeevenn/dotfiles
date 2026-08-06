@@ -61,6 +61,11 @@ return {
           configuration = {
             runtimes = runtimes,
           },
+          format = {
+            comments = {
+              enabled = false,
+            },
+          },
         },
       })
     end,
