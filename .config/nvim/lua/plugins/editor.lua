@@ -1,6 +1,14 @@
 -- Transform to show relative path in preview title
 local neotree_close_on_open = false
 
+local function natural_sort_key(path)
+  return (path:gsub("%d+", function(digits)
+    digits = digits:gsub("^0+", "")
+    -- Compare digit counts first, then digits, without converting large numbers.
+    return ("%012d%s"):format(#digits, digits)
+  end))
+end
+
 local function lsp_preview_title(item)
   if item.file then
     -- Show path relative to cwd, keeping last 3 directories
@@ -136,6 +144,16 @@ return {
       },
     },
     opts = {
+      sort_function = function(a, b)
+        if a.type ~= b.type then
+          return a.type < b.type -- Keep directories before files.
+        end
+        local a_key, b_key = natural_sort_key(a.path), natural_sort_key(b.path)
+        if a_key == b_key then
+          return a.path < b.path -- Stable order for names such as file2 and file02.
+        end
+        return a_key < b_key
+      end,
       event_handlers = {
         {
           event = "file_opened",
