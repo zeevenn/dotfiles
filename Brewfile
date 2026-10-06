@@ -20,6 +20,7 @@ brew 'gum'                # Pretty shell script prompts
 brew 'fnm'                # Fast Node Manager
 brew 'uv'                 # Python package and project manager
 brew 'rbenv'              # Ruby version manager
+brew 'maven'              # Java build tool
 
 # System tools
 brew 'imagemagick'        # Image processing
