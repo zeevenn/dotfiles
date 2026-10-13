@@ -49,6 +49,20 @@ vim.api.nvim_create_autocmd("FileType", {
   end,
 })
 
+-- Maven POMs use four spaces for editing and LSP formatting.
+vim.api.nvim_create_autocmd("FileType", {
+  group = vim.api.nvim_create_augroup("maven_indent", { clear = true }),
+  pattern = "xml",
+  callback = function(event)
+    if vim.fs.basename(vim.api.nvim_buf_get_name(event.buf)) ~= "pom.xml" then
+      return
+    end
+    vim.bo[event.buf].tabstop = 4
+    vim.bo[event.buf].shiftwidth = 4
+    vim.bo[event.buf].softtabstop = 4
+  end,
+})
+
 -- .env use dotenv filetype otherwise it will be detected as sh and the syntax is not good for env files
 vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
   group = vim.api.nvim_create_augroup("dotenv_filetype", { clear = true }),
