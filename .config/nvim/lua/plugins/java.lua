@@ -47,7 +47,36 @@ return {
 
       -- Complete the shutdown/exit handshake before quitting Neovim, so a quick reopen
       -- does not race the old server while it is saving and releasing the workspace.
-      opts.jdtls = vim.tbl_deep_extend("force", opts.jdtls or {}, { exit_timeout = 5000 })
+      local jdtls_config = opts.jdtls
+      opts.jdtls = function(config)
+        if type(jdtls_config) == "function" then
+          config = jdtls_config(config) or config
+        else
+          config = vim.tbl_deep_extend("force", config, jdtls_config or {})
+        end
+        config.exit_timeout = 5000
+
+        -- Mason exposes both versioned JARs and aliases. Load each bundle once;
+        -- the test runner and coverage agent are launched separately, not by OSGi.
+        local bundles, seen = {}, {}
+        local jdtls_plugins = vim.fn.expand("$MASON/packages/jdtls/plugins/")
+        for _, jar in ipairs(config.init_options.bundles or {}) do
+          local name = vim.fs.basename(jar)
+          local path = vim.uv.fs_realpath(jar) or jar
+          if
+            name ~= "com.microsoft.java.test.runner-jar-with-dependencies.jar"
+            and name ~= "jacocoagent.jar"
+            -- java-test can also ship the exact ASM bundles already in jdtls.
+            and vim.fn.filereadable(jdtls_plugins .. name) == 0
+            and not seen[path]
+          then
+            seen[path] = true
+            table.insert(bundles, path)
+          end
+        end
+        config.init_options.bundles = bundles
+        return config
+      end
 
       -- Newer jdtls releases require Java 21+ to run, while projects can still target Java 17.
       local jdtls_home = jdtls_java_home()
