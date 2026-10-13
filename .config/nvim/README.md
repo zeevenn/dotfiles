@@ -3,6 +3,19 @@
 A starter template for [LazyVim](https://github.com/LazyVim/LazyVim).
 Refer to the [documentation](https://lazyvim.github.io/installation) to get started.
 
+## XML and Maven Support
+
+Opening an XML, XSD, XSL, XSLT, or SVG buffer automatically installs the JVM
+LemMinX server and its Maven extension in the background, then enables the LSP
+for open buffers. Java, Bash, curl, and unzip must be available on PATH.
+Installed files are cached under Neovim's data directory; subsequent starts do
+not download them again. This server is managed separately from Mason because
+Mason's native LemMinX binary cannot load the Maven extension jars.
+
+If installation fails, `:LemminxMavenInstall` retries it without restarting
+Neovim. The script in `scripts/` is an internal installer; running it manually
+is not required.
+
 ## Project-local Configuration
 
 You can create a `.nvim.lua` file in any project root to customize Neovim settings per project.

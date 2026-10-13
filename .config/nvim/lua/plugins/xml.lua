@@ -2,17 +2,12 @@ return {
   "neovim/nvim-lspconfig",
   opts = function(_, opts)
     local server = vim.fn.stdpath("data") .. "/lemminx-maven/0.12.0"
-    local cmd
-    if
-      vim.fn.filereadable(server .. "/server.jar") == 1
-      and vim.fn.filereadable(server .. "/lib/lemminx-maven-0.12.0.jar") == 1
-    then
-      -- Maven property navigation requires the JVM server and Maven extension.
-      cmd = { "java", "-cp", server .. "/server.jar:" .. server .. "/lib/*", "org.eclipse.lemminx.XMLServerLauncher" }
-    end
     opts.servers = opts.servers or {}
     opts.servers.lemminx = vim.tbl_deep_extend("force", opts.servers.lemminx or {}, {
-      cmd = cmd,
+      -- Mason's native binary cannot load the Maven extension's JVM jars.
+      mason = false,
+      cmd = { "java", "-cp", server .. "/server.jar:" .. server .. "/lib/*", "org.eclipse.lemminx.XMLServerLauncher" },
+      root_markers = { ".git", "pom.xml" },
       settings = {
         xml = {
           downloadExternalResources = { enabled = true },
@@ -23,5 +18,10 @@ return {
         },
       },
     })
+    opts.setup = opts.setup or {}
+    opts.setup.lemminx = function(_, server_opts)
+      require("config.lemminx").setup(server_opts, server)
+      return true
+    end
   end,
 }

@@ -1,0 +1,53 @@
+{
+  "Insert Spring beans XML": {
+    "prefix": "beans",
+    "description": "Insert Spring beans XML",
+    "body": [
+      "<?xml version=\"1.0\" encoding=\"UTF-8\"?>",
+      "<beans xmlns=\"http://www.springframework.org/schema/beans\"",
+      "  xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"",
+      "  xsi:schemaLocation=\"http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd\">",
+      "",
+      "  $0",
+      "",
+      "</beans>"
+    ]
+  },
+  "Insert Spring context XML": {
+    "prefix": "springcontext",
+    "description": "Insert Spring context XML",
+    "body": [
+      "<?xml version=\"1.0\" encoding=\"UTF-8\"?>",
+      "<beans xmlns=\"http://www.springframework.org/schema/beans\"",
+      "  xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"",
+      "  xmlns:context=\"http://www.springframework.org/schema/context\"",
+      "  xsi:schemaLocation=\"http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd\">",
+      "",
+      "  <context:component-scan base-package=\"${1:dev.zeevenn.ioc}\"/>",
+      "",
+      "  $0",
+      "",
+      "</beans>"
+    ]
+  },
+  "Insert Maven POM": {
+    "prefix": "pom",
+    "description": "Insert Maven POM",
+    "body": [
+      "<?xml version=\"1.0\" encoding=\"UTF-8\"?>",
+      "<project xmlns=\"http://maven.apache.org/POM/4.0.0\"",
+      "  xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"",
+      "  xsi:schemaLocation=\"http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd\">",
+      "  <modelVersion>4.0.0</modelVersion>",
+      "",
+      "  <groupId>${1:dev.zeevenn}</groupId>",
+      "  <artifactId>${2:demo}</artifactId>",
+      "  <version>${3:1.0-SNAPSHOT}</version>",
+      "",
+      "  <dependencies>",
+      "    $0",
+      "  </dependencies>",
+      "</project>"
+    ]
+  }
+}
