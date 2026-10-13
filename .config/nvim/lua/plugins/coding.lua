@@ -60,8 +60,57 @@ return {
         return true
       end
 
+      local function open_markup_element(cmp)
+        local xml = vim.bo.filetype == "xml"
+        if not xml and vim.bo.filetype ~= "html" then
+          return
+        end
+        local opening_type = xml and "STag" or "start_tag"
+        local closing_type = xml and "ETag" or "end_tag"
+
+        local row, col = unpack(vim.api.nvim_win_get_cursor(0))
+        local line = vim.api.nvim_get_current_line()
+        if line:sub(col, col) ~= ">" or line:sub(col + 1, col + 2) ~= "</" then
+          return
+        end
+
+        -- Use syntax nodes so attributes, comments and CDATA cannot look like tag pairs.
+        local ok, node = pcall(vim.treesitter.get_node, { pos = { row - 1, col - 1 } })
+        if not ok then
+          return
+        end
+        while node and node:type() ~= opening_type do
+          node = node:parent()
+        end
+        local element = node and node:parent()
+        if not element or not vim.tbl_contains({ "element", "script_element", "style_element" }, element:type()) then
+          return
+        end
+        local closing = element:named_child(element:named_child_count() - 1)
+        if not closing or closing:type() ~= closing_type then
+          return
+        end
+        local close_row, close_col = closing:range()
+        if close_row ~= row - 1 or close_col ~= col then
+          return
+        end
+        local opening_name, closing_name = node:named_child(0), closing:named_child(0)
+        if not opening_name or not closing_name then
+          return
+        end
+        local open_text = vim.treesitter.get_node_text(opening_name, 0)
+        local close_text = vim.treesitter.get_node_text(closing_name, 0)
+        if (xml and open_text ~= close_text) or (not xml and open_text:lower() ~= close_text:lower()) then
+          return
+        end
+
+        cmp.hide()
+        -- Expand the pair; let the filetype's indentexpr handle indentation.
+        return vim.api.nvim_replace_termcodes("<CR><C-o>O", true, false, true)
+      end
+
       opts.keymap = opts.keymap or {}
-      opts.keymap["<CR>"] = { open_css_block, "accept", "fallback" }
+      opts.keymap["<CR>"] = { open_markup_element, open_css_block, "accept", "fallback" }
     end,
   },
 

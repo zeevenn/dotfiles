@@ -6,6 +6,10 @@
 vim.opt.conceallevel = 0
 vim.opt.autoread = true
 
+-- Indent embedded HTML script/style bodies by one step with the native indenter.
+vim.g.html_indent_script1 = "inc"
+vim.g.html_indent_style1 = "inc"
+
 -- This will cause buffer flickering in search
 -- vim.o.scrolloff = 8
 

@@ -34,13 +34,6 @@ end
 
 return {
   {
-    "nvim-treesitter/nvim-treesitter",
-    opts = {
-      -- Keep the built-in Java indenter; Tree-sitter dedents standalone opening braces.
-      indent = { disable = { "java" } },
-    },
-  },
-  {
     "mfussenegger/nvim-jdtls",
     opts = function(_, opts)
       opts.cmd = opts.cmd or { vim.fn.exepath("jdtls") }
