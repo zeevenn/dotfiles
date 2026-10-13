@@ -45,6 +45,17 @@ return {
     opts = function(_, opts)
       opts.cmd = opts.cmd or { vim.fn.exepath("jdtls") }
 
+      -- Bound Maven Central artifact lookup when jumping into dependencies without sources.
+      -- jdtls defaults to 10 seconds before falling back to the local Maven repository.
+      table.insert(opts.cmd, "--jvm-arg=-Djava.lsp.mavensearch.timeout=2")
+
+      -- Discover main classes on dap.continue(), instead of scanning on every LspAttach.
+      opts.dap_main = false
+
+      -- Complete the shutdown/exit handshake before quitting Neovim, so a quick reopen
+      -- does not race the old server while it is saving and releasing the workspace.
+      opts.jdtls = vim.tbl_deep_extend("force", opts.jdtls or {}, { exit_timeout = 5000 })
+
       -- Newer jdtls releases require Java 21+ to run, while projects can still target Java 17.
       local jdtls_home = jdtls_java_home()
       if jdtls_home and not has_java_executable(opts.cmd) then
