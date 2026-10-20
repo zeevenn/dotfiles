@@ -1,7 +1,34 @@
 local M = {}
+local filetypes = { "xml", "xsd", "xsl", "xslt", "svg" }
+
+function M.diagnostic_handler(handler)
+  return function(err, result, ctx, config)
+    if result and result.uri then
+      local filename = vim.uri_to_fname(result.uri)
+      local buf = vim.fn.bufnr(filename)
+      local filetype = buf >= 0 and vim.bo[buf].filetype or ""
+      if filetype == "" then
+        filetype = vim.filetype.match({ filename = filename })
+      end
+      local client = vim.lsp.get_client_by_id(ctx.client_id)
+      local supported = client and client.config.filetypes or filetypes
+      -- LemMinX can publish XML parse errors for a Java URI after refactoring.
+      -- Reject known non-XML documents without hiding real XML or Java errors.
+      if filetype and filetype ~= "" and not vim.tbl_contains(supported, filetype) then
+        if buf >= 0 then
+          vim.diagnostic.reset(vim.lsp.diagnostic.get_namespace(ctx.client_id), buf)
+        end
+        return
+      end
+    end
+    return handler(err, result, ctx, config)
+  end
+end
 
 function M.setup(opts, destination)
-  local filetypes = { "xml", "xsd", "xsl", "xslt", "svg" }
+  local method = "textDocument/publishDiagnostics"
+  opts.handlers = opts.handlers or {}
+  opts.handlers[method] = M.diagnostic_handler(opts.handlers[method] or vim.lsp.handlers[method])
   local running, attempted = false, false
   local group = vim.api.nvim_create_augroup("lemminx_maven_install", { clear = true })
 
