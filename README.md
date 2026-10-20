@@ -7,7 +7,7 @@ Mac setup for development. Inspired by [Zach Holman](https://github.com/holman)'
 - **Shell & Terminal**: Zsh (with Zinit plugin manager), Tmux, Ghostty terminal
 - **Editor**: Neovim with complete configuration (Including LSP, Treesitter, Git integration, AI and etc.)
 - **Basic Tools**: Git configuration and SSH setup
-- **Development Tools**: Node.js, Python, Ruby, Docker, React Native
+- **Development Tools**: Node.js, Python, Ruby, Rust, Docker, React Native
 - **System**: macOS defaults, proxy configuration, useful commands and scripts
 
 ## Improvements over Holman's dotfiles
@@ -110,6 +110,40 @@ you can find this script in `bin/`.
 dot
 ```
 
+## Rust
+
+Rust is managed with [rustup](https://rust-lang.org/tools/install/). The installer
+is included in `script/install`, or can be run separately:
+
+```bash
+bash rust/install.sh
+exec zsh
+```
+
+This installs the stable toolchain with Cargo, rustfmt, Clippy, rust-analyzer,
+and standard library sources. Re-running the installer preserves an existing
+default toolchain. Zsh loads the Cargo binary path and Rust/Cargo completions
+automatically, respecting a custom `CARGO_HOME`.
+
+```bash
+rustup update stable        # Update stable Rust
+rustup show                 # Show toolchains and the active version
+cargo new hello-rust        # Create a project
+cd hello-rust
+cargo run                   # Build and run
+cargo test                  # Run tests
+cargo fmt                   # Format code
+cargo clippy                # Lint code
+```
+
+For a project-specific toolchain, add a `rust-toolchain.toml` in that project;
+rustup selects it automatically. Cargo caches and installed toolchains stay
+outside this repository in `~/.cargo` and `~/.rustup`.
+
+Neovim enables LazyVim's Rust extra for rust-analyzer completion, navigation,
+diagnostics, formatting, and Cargo.toml dependency assistance. Open a Rust file
+after installation to load the language support.
+
 ## ZSH Plugins
 
 Plugins are managed by [Zinit](https://github.com/zdharma-continuum/zinit) in `zsh/zinit.zsh`:
@@ -142,10 +176,9 @@ export SECRET = ***
 
 Create a new directory (e.g., `rust/`) and add files:
 
-- `rust/env.zsh` - Environment variables
-- `rust/aliases.zsh` - Aliases
+- `rust/install.sh` - Toolchain and component installation
+- `rust/completion.zsh` - Command completions
 - `rust/path.zsh` - PATH additions
-- `rust/cargo.symlink` - Symlink to `~/.cargo`
 
 They'll be automatically loaded!
 

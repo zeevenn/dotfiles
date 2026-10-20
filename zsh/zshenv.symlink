@@ -1,0 +1,4 @@
+# rustup may not be installed yet on a newly bootstrapped machine.
+if [[ -r "${CARGO_HOME:-$HOME/.cargo}/env" ]]; then
+  source "${CARGO_HOME:-$HOME/.cargo}/env"
+fi
