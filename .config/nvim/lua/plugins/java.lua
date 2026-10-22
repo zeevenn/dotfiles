@@ -32,9 +32,67 @@ local function has_java_executable(cmd)
   return false
 end
 
+local function run_java_main()
+  local bufnr = vim.api.nvim_get_current_buf()
+  local client = vim.lsp.get_clients({ bufnr = bufnr, name = "jdtls" })[1]
+  if not client or not require("dap").adapters.java then
+    vim.notify("Wait for the Java language server and debugger to finish starting", vim.log.levels.WARN)
+    return
+  end
+  vim.cmd.update()
+
+  -- Ask JDTLS about this file, including nested classes and the owning module.
+  client:exec_cmd({
+    command = "vscode.java.resolveMainMethod",
+    arguments = { vim.uri_from_bufnr(bufnr) },
+  }, { bufnr = bufnr }, function(err, mains)
+    if err then
+      vim.notify(err.message, vim.log.levels.ERROR)
+      return
+    end
+    if not mains or #mains == 0 then
+      vim.notify("No Java main method found in the current file", vim.log.levels.WARN)
+      return
+    end
+
+    local function launch(main)
+      if not main or not vim.api.nvim_buf_is_valid(bufnr) then
+        return
+      end
+      vim.api.nvim_buf_call(bufnr, function()
+        require("dapui").open()
+        require("dap").run({
+          type = "java",
+          request = "launch",
+          name = "Run " .. main.mainClass,
+          mainClass = main.mainClass,
+          projectName = main.projectName,
+          cwd = client.config.root_dir,
+          noDebug = true,
+          console = "integratedTerminal",
+        })
+      end)
+    end
+
+    if #mains == 1 then
+      launch(mains[1])
+    else
+      vim.ui.select(mains, {
+        prompt = "Run Java main class",
+        format_item = function(main)
+          return main.mainClass
+        end,
+      }, launch)
+    end
+  end)
+end
+
 return {
   {
     "mfussenegger/nvim-jdtls",
+    keys = {
+      { "<leader>dR", run_java_main, desc = "Run Java Main Class", ft = "java" },
+    },
     opts = function(_, opts)
       opts.cmd = opts.cmd or { vim.fn.exepath("jdtls") }
 

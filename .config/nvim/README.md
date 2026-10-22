@@ -3,6 +3,12 @@
 A starter template for [LazyVim](https://github.com/LazyVim/LazyVim).
 Refer to the [documentation](https://lazyvim.github.io/installation) to get started.
 
+## Java Run
+
+`<leader>dR` (Space, d, Shift-r) saves the current Java file and runs its main
+class without stopping at breakpoints. If the file has multiple main classes,
+a picker lets you choose one. Wait for JDTLS to attach before running.
+
 ## XML and Maven Support
 
 Opening an XML, XSD, XSL, XSLT, or SVG buffer automatically installs the JVM
